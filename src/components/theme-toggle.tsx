@@ -24,7 +24,7 @@ export function ThemeToggle() {
       transition: {
         duration: 2,
         repeat: Infinity,
-        repeatType: "loop"
+        repeatType: "loop" as const
       }
     }
   }
