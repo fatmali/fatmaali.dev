@@ -1,0 +1,9 @@
+name: fatmaalidev
+metadata:
+  template: nextjs-static-webapp@0.0.1
+services:
+  web:
+    project: .
+    language: ts
+    host: staticwebapp
+    dist: out
