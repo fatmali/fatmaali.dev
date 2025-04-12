@@ -35,7 +35,7 @@ const wittyTaglines = [
   "I make pixels behave 👨‍💻",
   "Hire me before someone else does 👀",
   "Code that doesn't make you cry 😭",
-  "Turning caffeine into websites since 2015 ☕",
+  "Turning caffeine into websites since 2017 ☕",
   "UX so good, you'll forget it exists 🔥",
   "I speak fluent React... and sarcasm 💅"
 ];
@@ -104,7 +104,7 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             className="text-lg font-bold"
           >
-            <span className="text-primary">Fatma</span>Ali
+            <span className="text-primary">Fatma {" "}</span>Ali
           </motion.div>
           
           <nav className="hidden md:flex items-center space-x-8">
@@ -273,7 +273,7 @@ export default function Home() {
                   {/* Sticky profile image - visible across sections */}
       <motion.div 
         ref={imageRef}
-        className={`right-10 z-30 transition-all duration-500 hidden lg:block top-32`}
+        className="relative flex justify-center md:justify-start"
         style={{ 
           opacity: 0.95,
           transform: 'scale(1)'
@@ -282,7 +282,7 @@ export default function Home() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
       >
-        <div className="relative w-44 h-44 group perspective">
+        <div className="relative w-32 h-32 md:w-44 md:h-44 group perspective">
           {/* Terminal-inspired frame */}
           <div className="absolute -inset-3 rounded-lg bg-gradient-to-r from-primary to-secondary p-1 glow-strong">
             <div className="h-full w-full bg-background dark:bg-gray-900 rounded-md p-2">
@@ -409,7 +409,6 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-center"
             >
-              <h3 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">My Journey</h3>
               <p className="text-muted-foreground mb-6">
                 As a passionate Frontend Engineer with expertise in building modern web applications, 
                 I thrive on creating intuitive, accessible, and beautiful user interfaces. My journey 
@@ -602,7 +601,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary">Featured Projects</h2>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary">Featured Projects</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
             <p className="text-muted-foreground max-w-2xl mx-auto mt-6">
               A selection of my recent work showcasing my skills in frontend development, UX design, and problem-solving.
@@ -799,7 +798,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-secondary via-accent to-primary">Get In Touch</h2>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text bg-gradient-to-r from-secondary via-accent to-primary">Get In Touch</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-secondary to-primary mx-auto mb-6"></div>
             <p className="text-muted-foreground max-w-xl mx-auto">
               Interested in working together? Feel free to reach out for collaborations or just a friendly hello!
@@ -827,7 +826,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Email</p>
-                      <a href="mailto:contact@fatmaali.dev" className="font-medium hover:text-primary transition-colors">contact@fatmaali.dev</a>
+                      <a href="mailto:hello@fatmaali.dev" className="font-medium hover:text-primary transition-colors">hello@fatmaali.dev</a>
                     </div>
                   </div>
                   
@@ -959,7 +958,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="text-2xl font-bold mb-4"
               >
-                <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Fatma</span>Ali
+                <span className="text-primary bg-clip-text bg-gradient-to-r from-primary to-accent">Fatma {" "}</span>Ali
               </motion.div>
               <p className="text-muted-foreground text-sm mb-4">
                 Frontend Engineer specializing in creating beautiful, 
@@ -976,7 +975,7 @@ export default function Home() {
                 <span>Download Resume</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                   <path fillRule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
-                  <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                  <path fillRule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
                 </svg>
               </motion.a>
             </div>
