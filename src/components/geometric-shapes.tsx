@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Shape = {
   id: number;
@@ -35,7 +35,7 @@ export function GeometricShapes({
   const [shapes, setShapes] = useState<Shape[]>([]);
   
   // Colors from your theme
-  const colors = [
+  const colors = useMemo(() => [
     "var(--fun-pink)",
     "var(--fun-purple)",
     "var(--fun-blue)",
@@ -43,16 +43,16 @@ export function GeometricShapes({
     "var(--primary)",
     "var(--secondary)",
     "var(--accent)"
-  ];
+  ], []);
   
   // Animations from your CSS
-  const animations = [
+  const animations = useMemo(() => [
     "animate-float",
     "animate-pulse-slow",
     "animate-spin-slow",
     "animate-ping-slow",
     "animate-wiggle"
-  ];
+  ], []);
 
   useEffect(() => {
     const generateShapes = () => {
@@ -101,7 +101,7 @@ export function GeometricShapes({
       window.addEventListener("resize", generateShapes);
       return () => window.removeEventListener("resize", generateShapes);
     }
-  }, [density, section, maxSize, minSize, colors.length, animations.length]);
+  }, [density, section, maxSize, minSize, colors.length, animations.length, colors, animations]);
   
   return (
     <div className={`${fixed ? 'fixed' : 'absolute'} inset-0 overflow-hidden pointer-events-none z-0 ${className}`}>
