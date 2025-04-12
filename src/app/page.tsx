@@ -33,11 +33,14 @@ const itemVariants = {
 // Fun taglines that rotate randomly
 const wittyTaglines = [
   "I make pixels behave 👨‍💻",
-  "Hire me before someone else does 👀",
-  "Code that doesn't make you cry 😭",
   "Turning caffeine into websites since 2017 ☕",
   "UX so good, you'll forget it exists 🔥",
   "I speak fluent React... and sarcasm 💅",
+  "Building the web, one pixel at a time 🌐",
+  "Frontend wizardry in progress 🪄",
+  "Crafting digital experiences with flair ✨",
+  "Making the internet a prettier place 🌈",
+  "Code is my canvas, pixels are my paint 🎨",
 ];
 
 export default function Home() {
