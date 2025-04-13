@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  // Remove 'output: export' to enable API routes
+  // output: 'export',
   basePath: '',
-  distDir: 'out',
+  // Remove distDir as it's only needed for static export
+  // distDir: 'out',
   images: {
     unoptimized: true,
   },

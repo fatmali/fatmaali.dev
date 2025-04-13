@@ -2,6 +2,7 @@ import "./globals.css"
 import { Outfit, Comfortaa, VT323, Space_Mono, Inconsolata } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { GeometricShapes } from "@/components/geometric-shapes"
+import { ToastProvider } from "@/components/toast-provider"
 
 // Outfit as our clean sans-serif for body text
 const outfit = Outfit({ 
@@ -70,6 +71,9 @@ export default function RootLayout({
           
           {/* Page content */}
           {children}
+          
+          {/* Toast notifications */}
+          <ToastProvider />
           
           {/* Add Client Side Script for cursor effect */}
           <script dangerouslySetInnerHTML={{

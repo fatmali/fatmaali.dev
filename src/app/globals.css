@@ -85,6 +85,12 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* Terminal cursor blink animation for toast */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* Apply display font to headings */
 h1, h2, h3, h4, .font-display {
   font-family: var(--font-display, var(--font-sans), Arial, sans-serif);
@@ -564,4 +570,34 @@ html {
   .animate-float-medium {
     animation: float-medium 3s ease-in-out infinite;
   }
+}
+
+/* Terminal select dropdown styling */
+.terminal-font select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M3 5h10a1 1 0 0 1 .7 1.7l-5 5a1 1 0 0 1-1.4 0l-5-5A1 1 0 0 1 3 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.dark .terminal-font select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300ff00' viewBox='0 0 16 16'%3E%3Cpath d='M3 5h10a1 1 0 0 1 .7 1.7l-5 5a1 1 0 0 1-1.4 0l-5-5A1 1 0 0 1 3 5z'/%3E%3C/svg%3E");
+}
+
+.dark .terminal-font select option {
+  background-color: #0a0a0a;
+  color: var(--neon-green);
+  font-family: var(--font-terminal, monospace);
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
+.dark .terminal-font select option::before {
+  content: '> ';
+  color: var(--neon-green);
+}
+
+.dark .terminal-font select:focus {
+  box-shadow: 0 0 10px var(--primary), inset 0 0 5px var(--primary);
+  border-color: var(--primary);
 }
