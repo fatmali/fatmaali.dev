@@ -1,0 +1,11 @@
+*.js.map
+*.ts
+.git*
+.vscode
+__azurite_*
+__blobstorage__
+__queuestorage__
+__tables__
+local.settings.json
+test
+node_modules

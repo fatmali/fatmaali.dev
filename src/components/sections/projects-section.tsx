@@ -184,7 +184,7 @@ export function ProjectsSection() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="px-4 py-2 text-sm bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-full shadow-md shadow-primary/20 flex items-center gap-1"
-                    href="#skills"
+                    href="/#skills"
                   >
                     <span>View Skills</span>
                     <svg
@@ -266,7 +266,7 @@ export function ProjectsSection() {
                 View GitHub Profile
               </motion.a>
               <motion.a
-                href="#contact"
+                href="/#contact"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg font-medium shadow-lg shadow-primary/20 flex items-center gap-2 justify-center"

@@ -3,6 +3,9 @@
 /.pnp
 .pnp.js
 
+/api/node_modules
+/api/dist
+
 # testing
 /coverage
 
@@ -35,4 +38,5 @@ next-env.d.ts
 
 # IDE
 .idea/
-.vscode/
+
+api/local.settings.json

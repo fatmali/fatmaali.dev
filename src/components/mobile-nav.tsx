@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Menu } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { usePathname } from "next/navigation"
 
 interface MobileNavProps {
   items: {
@@ -13,16 +14,47 @@ interface MobileNavProps {
 
 export function MobileNav({ items }: MobileNavProps) {
   const [open, setOpen] = React.useState(false)
-  
+  const pathname = usePathname();
+  const [currentHash, setCurrentHash] = React.useState("");
+
   React.useEffect(() => {
-    if (open) {
-      document.body.classList.add("overflow-hidden")
-    } else {
-      document.body.classList.remove("overflow-hidden")
+    // Set initial hash on client side safely
+    if (typeof window !== 'undefined') {
+      setCurrentHash(window.location.hash);
+      
+      const handleHashChange = () => {
+        setCurrentHash(window.location.hash);
+      };
+      
+      window.addEventListener("hashchange", handleHashChange);
+      return () => window.removeEventListener("hashchange", handleHashChange);
     }
-    
-    return () => {
-      document.body.classList.remove("overflow-hidden")
+  }, []);
+  
+  // Fix: Improved active link detection
+  const isActive = (href: string) => {
+    if (href.includes("#")) {
+      if (href.startsWith("/#")) {
+        return pathname === "/" && currentHash === href.substring(1);
+      }
+      const [path, hash] = href.split("#");
+      return pathname === path && currentHash === `#${hash}`;
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+  
+  // Fix: Properly manage overflow for body when menu is open
+  React.useEffect(() => {
+    if (typeof document !== 'undefined') {
+      if (open) {
+        document.body.classList.add("overflow-hidden")
+      } else {
+        document.body.classList.remove("overflow-hidden")
+      }
+      
+      return () => {
+        document.body.classList.remove("overflow-hidden")
+      }
     }
   }, [open])
 
@@ -77,25 +109,10 @@ export function MobileNav({ items }: MobileNavProps) {
         whileHover="hover"
         whileTap="tap"
         onClick={() => setOpen(true)}
-        className="md:hidden relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center ml-4 border border-border sketch-box dark:neon-border"
+        className="md:hidden relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center ml-4 border border-border sketch-box"
         aria-label="Open menu"
       >
-        <Menu className="h-5 w-5 dark:text-neon-green" />
-        
-        {/* Fun rotating circles */}
-        <motion.div 
-          className="absolute -inset-1 rounded-full border-2 border-dashed border-primary/30 opacity-0"
-          animate={{ 
-            opacity: [0, 0.5, 0],
-            scale: [0.8, 1.2, 0.8],
-            rotate: [0, 180],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            repeatType: "loop"
-          }}
-        />
+        <Menu className="h-5 w-5" />
       </motion.button>
       
       <AnimatePresence>
@@ -105,36 +122,9 @@ export function MobileNav({ items }: MobileNavProps) {
             animate="open"
             exit="closed"
             variants={menuVariants}
-            className="fixed inset-0 z-50 bg-background/95 backdrop-blur-md md:hidden flex flex-col dark:bg-black/95"
+            className="fixed inset-0 z-50 bg-background backdrop-blur-md md:hidden flex flex-col"
           >
-            <div className="relative w-full h-full overflow-y-auto flex flex-col">
-              {/* Decorative elements */}
-              <motion.div
-                className="absolute top-10 right-10 w-40 h-40 rounded-full bg-primary/10 blur-3xl dark:bg-neon-pink/20"
-                animate={{
-                  x: [0, 30, 0],
-                  y: [0, -20, 0],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              />
-              <motion.div
-                className="absolute bottom-20 left-5 w-32 h-32 rounded-full bg-secondary/10 blur-3xl dark:bg-neon-blue/20"
-                animate={{
-                  x: [0, -20, 0],
-                  y: [0, 30, 0],
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 10,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              />
+            <div className="relative w-full h-full flex flex-col">
               
               {/* Squiggly decorative line */}
               <svg
@@ -161,8 +151,8 @@ export function MobileNav({ items }: MobileNavProps) {
                 </defs>
               </svg>
 
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <div className="text-lg font-bold dark:text-neon-blue dark:neon-text">
+              <div className="flex items-center justify-between p-3 border-b border-border">
+                <div className="text-lg font-bold">
                   <span className="text-primary">Fatma</span>Ali
                 </div>
                 <motion.button
@@ -171,30 +161,55 @@ export function MobileNav({ items }: MobileNavProps) {
                   whileHover="hover"
                   whileTap="tap"
                   onClick={() => setOpen(false)}
-                  className="relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center border border-border sketch-box dark:neon-border"
+                  className="relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center border border-border sketch-box"
                   aria-label="Close menu"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="dark:text-neon-green">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6L6 18"></path>
                     <path d="M6 6L18 18"></path>
                   </svg>
                 </motion.button>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center px-4 py-10">
-                <nav className="flex flex-col gap-6 items-center">
+              <div className="flex-1 flex flex-col justify-center items-center px-4 overflow-y-scroll bg-background min-h-screen">
+                <nav className="flex flex-col gap-6 items-center w-full">
                   {items.map((item, i) => (
                     <motion.a
                       key={item.name}
                       custom={i}
                       variants={menuItemVariants}
                       href={item.href}
-                      onClick={() => setOpen(false)}
-                      className="text-2xl font-medium hover:text-primary transition-colors relative group nerdy-font dark:text-neon-blue"
+                      onClick={(e) => {
+                        if (item.href.includes('#')) {
+                          const targetId = item.href.split('#')[1];
+                          const targetElement = document.getElementById(targetId);
+                          if (targetElement) {
+                            e.preventDefault();
+                            setOpen(false);
+                            setTimeout(() => {
+                              targetElement.scrollIntoView({ behavior: 'smooth' });
+                              window.location.hash = '#' + targetId;
+                            }, 300);
+                          } else {
+                            setOpen(false);
+                          }
+                        } else {
+                          setOpen(false);
+                        }
+                      }}
+                      className={`text-2xl font-medium transition-colors relative group nerdy-font z-10 ${
+                        isActive(item.href)
+                          ? "text-primary" 
+                          : "hover:text-primary"
+                      }`}
                     >
                       {item.name}
                       <motion.span 
-                        className="absolute -bottom-2 left-0 w-0 h-1 bg-gradient-to-r from-primary to-accent group-hover:w-full dark:from-neon-pink dark:to-neon-blue"
+                        className={`absolute -bottom-2 left-0 ${
+                          isActive(item.href) 
+                            ? "w-full h-1 bg-primary" 
+                            : "w-0 h-1 bg-gradient-to-r from-primary to-accent group-hover:w-full"
+                        }`}
                         transition={{ duration: 0.3 }}
                       />
                     </motion.a>
@@ -203,13 +218,24 @@ export function MobileNav({ items }: MobileNavProps) {
                 
                 <div className="mt-12 flex flex-col gap-6 items-center">
                   <motion.a
-                    href="#contact"
+                    href="/#contact"
                     variants={menuItemVariants}
                     custom={items.length}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setOpen(false);
+                      // Wait for menu close animation
+                      setTimeout(() => {
+                        const contactSection = document.getElementById("contact");
+                        if (contactSection) {
+                          contactSection.scrollIntoView({ behavior: 'smooth' });
+                          window.location.hash = '#contact';
+                        }
+                      }, 300);
+                    }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-lg shadow-primary/20 nerdy-font terminal-button dark:neon-border"
+                    className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-lg shadow-primary/20 nerdy-font terminal-button z-10"
                   >
                     Get in Touch
                   </motion.a>
@@ -223,7 +249,7 @@ export function MobileNav({ items }: MobileNavProps) {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-muted text-foreground rounded-full font-medium border border-border flex items-center gap-2 terminal-button sketch-box"
+                    className="px-6 py-3 bg-muted text-foreground rounded-full font-medium border border-border flex items-center gap-2 terminal-button sketch-box z-10"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
@@ -233,37 +259,6 @@ export function MobileNav({ items }: MobileNavProps) {
                   </motion.a>
                 </div>
               </div>
-              
-              {/* Fun confetti elements */}
-              {Array.from({ length: 10 }).map((_, i) => (
-                <motion.div
-                  key={`confetti-${i}`}
-                  className="absolute rounded-full"
-                  initial={{
-                    x: Math.random() * 100 - 50 + 50 + "%", 
-                    y: Math.random() * 100 + "%",
-                    scale: Math.random() * 0.5 + 0.5,
-                    backgroundColor: [
-                      'var(--neon-pink)', 'var(--neon-blue)', 'var(--neon-green)', 'var(--neon-yellow)', 'var(--primary)'
-                    ][Math.floor(Math.random() * 5)]
-                  }}
-                  animate={{
-                    y: [null, Math.random() * 20 - 10],
-                    x: [null, Math.random() * 20 - 10],
-                    rotate: [0, 360],
-                  }}
-                  transition={{
-                    duration: 3 + Math.random() * 2,
-                    repeat: Infinity,
-                    repeatType: "mirror"
-                  }}
-                  style={{
-                    width: (3 + Math.random() * 5) + 'px',
-                    height: (3 + Math.random() * 5) + 'px',
-                    opacity: 0.6
-                  }}
-                />
-              ))}
             </div>
           </motion.div>
         )}

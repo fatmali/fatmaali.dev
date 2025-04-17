@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://fatmaali.dev
+
+# Sitemaps
+Sitemap: https://fatmaali.dev/sitemap.xml

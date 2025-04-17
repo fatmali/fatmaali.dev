@@ -23,11 +23,11 @@
     "emailPassword": {
       "value": "${EMAIL_PASSWORD}"
     },
-    "recaptchaSecretKey": {
-      "value": "${RECAPTCHA_SECRET_KEY}"
+    "turnstileSecretKey": {
+      "value": "${TURNSTILE_SECRET_KEY}"
     },
-    "recaptchaPublicKey": {
-      "value": "${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}"
+    "turnstilePublicKey": {
+      "value": "${NEXT_PUBLIC_TURNSTILE_SITE_KEY}"
     }
   }
 }

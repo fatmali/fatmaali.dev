@@ -20,12 +20,6 @@ export function ThemeToggle() {
     initial: { opacity: 0, scale: 0.5 },
     animate: { 
       opacity: [0, 1, 0], 
-      scale: [0.5, 1.2, 0.5],
-      transition: {
-        duration: 2,
-        repeat: Infinity,
-        repeatType: "loop" as const
-      }
     }
   }
 
@@ -47,7 +41,6 @@ export function ThemeToggle() {
       whileTap={{ scale: 0.9 }}
       animate={theme === "light" ? "light" : "dark"}
       variants={toggleVariants}
-      transition={{ duration: 0.5, type: "spring" }}
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       className="relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center overflow-hidden border border-border sketch-box dark:neon-border"
       aria-label="Toggle theme"

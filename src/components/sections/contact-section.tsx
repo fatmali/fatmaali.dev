@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { GeometricShapes } from "../geometric-shapes";
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
-import ReCAPTCHA from "react-google-recaptcha";
+import Turnstile from "../Turnstile";
 
 // Custom terminal-style dropdown component
 const TerminalDropdown = ({ 
@@ -129,35 +129,8 @@ export function ContactSection() {
     subject: "collaboration", // Default value
     message: "",
   });
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
-  
-  // Execute reCAPTCHA when component mounts for v3
-  useEffect(() => {
-    // Load reCAPTCHA script manually for v3
-    const loadRecaptcha = async () => {
-      try {
-        // Check if we're in development and provide a bypass mechanism
-        const isDev = process.env.NODE_ENV === 'development';
-        
-        if (isDev && !process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY) {
-          console.warn('reCAPTCHA site key not configured for development. Using mock token.');
-          setCaptchaToken('dev-testing-token');
-          return;
-        }
-        
-        if (recaptchaRef.current) {
-          const token = await recaptchaRef.current.executeAsync();
-          setCaptchaToken(token);
-        }
-      } catch (error) {
-        console.error("reCAPTCHA execution failed:", error);
-      }
-    };
-    
-    loadRecaptcha();
-  }, []);
-  
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -175,19 +148,8 @@ export function ContactSection() {
     }));
   };
   
-  const handleCaptchaChange = (token: string | null) => {
-    setCaptchaToken(token);
-  };
-  
-  const refreshCaptcha = async () => {
-    if (recaptchaRef.current) {
-      try {
-        const token = await recaptchaRef.current.executeAsync();
-        setCaptchaToken(token);
-      } catch (error) {
-        console.error("Failed to refresh reCAPTCHA:", error);
-      }
-    }
+  const handleTurnstileVerify = (token: string) => {
+    setTurnstileToken(token);
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -209,32 +171,35 @@ export function ContactSection() {
       return;
     }
     
-    // Validate captcha
-    if (!captchaToken) {
-      toast.error("reCAPTCHA verification failed. Please try again.");
-      await refreshCaptcha();
-      return;
-    }
-    
     // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast.error("Please enter a valid email address");
       return;
     }
+
     
     // Submit form
     try {
       setIsSubmitting(true);
       
-      const response = await fetch("/api/send-email", {
+      // Get the API endpoint from environment variable
+      const apiBaseUrl = process.env.NEXT_PUBLIC_FUNCTION_APP_URL || '';
+      
+      // For deployment: If no environment variable is set, use a placeholder that will be replaced during deployment
+      const apiEndpoint = apiBaseUrl || '{{AZURE_FUNCTION_URL}}';
+      
+      // Use the Azure Function API endpoint
+      const apiUrl = `${apiEndpoint}/send-email`;
+            
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...formData,
-          captchaToken
+          turnstileToken
         }),
       });
       
@@ -255,8 +220,8 @@ export function ContactSection() {
         message: "",
       });
       
-      // Reset and execute reCAPTCHA for the next submission
-      await refreshCaptcha();
+      // Reset Turnstile token and widget if it exists and we have the widget ID
+      setTurnstileToken(null);
       
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to send email");
@@ -494,12 +459,12 @@ export function ContactSection() {
                   placeholder="Your message..."
                 ></textarea>
               </div>
-              <div className="hidden">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  size="invisible"
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                  onChange={handleCaptchaChange}
+              
+              <div>
+                <Turnstile
+                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+                  onVerify={handleTurnstileVerify}
+                  theme="auto"
                 />
               </div>
 
@@ -526,7 +491,7 @@ export function ContactSection() {
               </motion.button>
 
               <p className="text-xs text-muted-foreground text-center mt-2">
-                I&apos;ll get back to you as soon as possible!
+                This site is protected by Cloudflare Turnstile to prevent spam.
               </p>
             </form>
           </motion.div>

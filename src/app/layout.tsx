@@ -3,6 +3,7 @@ import { Outfit, Comfortaa, VT323, Space_Mono, Inconsolata } from "next/font/goo
 import { ThemeProvider } from "@/components/theme-provider"
 import { GeometricShapes } from "@/components/geometric-shapes"
 import { ToastProvider } from "@/components/toast-provider"
+import Script from "next/script"
 
 // Outfit as our clean sans-serif for body text
 const outfit = Outfit({ 
@@ -44,6 +45,41 @@ const inconsolata = Inconsolata({
 export const metadata = {
   title: "Fatma Ali | Frontend Engineer",
   description: "Portfolio website for Fatma Ali, Frontend Engineer specialized in React, TypeScript, and Next.js",
+  metadataBase: new URL('https://fatmaali.dev'),
+  keywords: ['Frontend Engineer', 'React', 'TypeScript', 'Next.js', 'Software Engineer', 'Web Developer', 'JavaScript', 'NodeJS'],
+  authors: [{ name: 'Fatma Ali' }],
+  creator: 'Fatma Ali',
+  publisher: 'Fatma Ali',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://fatmaali.dev',
+    title: 'Fatma Ali | Frontend Engineer',
+    description: 'Portfolio website for Fatma Ali, Frontend Engineer specialized in React, TypeScript, and Next.js',
+    siteName: 'Fatma Ali Portfolio',
+    images: [
+      {
+        url: '/public/images/headshot.JPG',
+        width: 1200,
+        height: 630,
+        alt: 'Fatma Ali - Frontend Engineer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fatma Ali | Frontend Engineer',
+    description: 'Portfolio website for Fatma Ali, Frontend Engineer specialized in React, TypeScript, and Next.js',
+    images: ['/public/images/headshot.JPG'],
+    creator: '@fatmali',
+  },
+  alternates: {
+    canonical: 'https://fatmaali.dev',
+  },
 }
 
 export default function RootLayout({
@@ -53,6 +89,38 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          id="json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Fatma Ali",
+              "url": "https://fatmaali.dev",
+              "image": "https://fatmaali.dev/images/headshot.JPG",
+              "jobTitle": "Frontend Engineer",
+              "worksFor": {
+                "@type": "Organization",
+                "name": "Microsoft"
+              },
+              "alumniOf": [
+                {
+                  "@type": "CollegeOrUniversity",
+                  "name": "University of Eldoret"
+                }
+              ],
+              "knowsAbout": ["React", "TypeScript", "Next.js", "JavaScript", "Frontend Development"],
+              "sameAs": [
+                "https://github.com/fatmali",
+                "https://linkedin.com/in/fatmali",
+                "https://x.com/_fatmali"
+              ]
+            })
+          }}
+        />
+      </head>
       <body className={`${outfit.variable} ${comfortaa.variable} ${vt323.variable} ${spaceMono.variable} ${inconsolata.variable}`}>
         <ThemeProvider
           attribute="class"
@@ -63,42 +131,12 @@ export default function RootLayout({
           {/* Geometric shapes background */}
           <GeometricShapes />
           
-          {/* Cursor effect - a fun element that follows the cursor */}
-          <div id="cursor-follow" className="fixed w-10 h-10 pointer-events-none z-50 hidden md:flex items-center justify-center">
-            <div className="absolute w-5 h-5 bg-primary rounded-full opacity-50 animate-ping-slow"></div>
-            <div className="absolute w-2 h-2 bg-primary rounded-full"></div>
-          </div>
-          
           {/* Page content */}
           {children}
           
           {/* Toast notifications */}
           <ToastProvider />
-          
-          {/* Add Client Side Script for cursor effect */}
-          <script dangerouslySetInnerHTML={{
-            __html: `
-              document.addEventListener('DOMContentLoaded', () => {
-                const cursor = document.getElementById('cursor-follow');
-                if (cursor) {
-                  document.addEventListener('mousemove', (e) => {
-                    cursor.style.left = e.clientX + 'px';
-                    cursor.style.top = e.clientY + 'px';
-                  });
-                  
-                  // Make cursor bigger on clickable elements
-                  document.querySelectorAll('a, button').forEach(el => {
-                    el.addEventListener('mouseenter', () => {
-                      cursor.classList.add('scale-150');
-                    });
-                    el.addEventListener('mouseleave', () => {
-                      cursor.classList.remove('scale-150');
-                    });
-                  });
-                }
-              });
-            `
-          }} />
+
         </ThemeProvider>
       </body>
     </html>

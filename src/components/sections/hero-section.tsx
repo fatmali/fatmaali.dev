@@ -302,7 +302,7 @@ export function HeroSection() {
               className="flex flex-wrap gap-4 justify-center md:justify-start"
             >
               <motion.a
-                href="#contact"
+                href="/#contact"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-lg shadow-primary/20 nerdy-font terminal-button dark:neon-border"
@@ -311,7 +311,7 @@ export function HeroSection() {
               </motion.a>
 
               <motion.a
-                href="#skills"
+                href="/#skills"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-muted text-foreground rounded-full font-medium border border-border terminal-button sketch-box"
