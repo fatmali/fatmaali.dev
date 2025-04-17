@@ -5,6 +5,7 @@ import { GeometricShapes } from "../geometric-shapes";
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import Turnstile from "../Turnstile";
+import { trackEvents } from "../google-analytics";
 
 // Custom terminal-style dropdown component
 const TerminalDropdown = ({ 
@@ -209,6 +210,9 @@ export function ContactSection() {
         throw new Error(data.error || "Failed to send email");
       }
       
+      // Track successful form submission
+      trackEvents.trackContactSubmit(true);
+      
       // Success
       toast.success("Message sent successfully! I'll get back to you soon.");
       
@@ -224,12 +228,15 @@ export function ContactSection() {
       setTurnstileToken(null);
       
     } catch (error) {
+      // Track failed form submission
+      trackEvents.trackContactSubmit(false);
+      
       toast.error(error instanceof Error ? error.message : "Failed to send email");
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   return (
     <section
       id="contact"

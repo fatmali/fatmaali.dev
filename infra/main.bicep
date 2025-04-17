@@ -23,6 +23,8 @@ param emailPassword string
 param turnstileSecretKey string
 @secure()
 param turnstilePublicKey string
+@secure()
+param publicGaMeasurementId string
 
 resource staticWebApp 'Microsoft.Web/staticSites@2024-04-01' = {
   name: 'swa-${resourceToken}'
@@ -139,6 +141,10 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'TURNSTILE_SECRET_KEY'
           value: turnstileSecretKey
+        }
+        {
+          name: 'NEXT_PUBLIC_GA_MEASUREMENT_ID'
+          value: publicGaMeasurementId
         }
       ]
     }

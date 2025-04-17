@@ -3,7 +3,9 @@ import { Outfit, Comfortaa, VT323, Space_Mono, Inconsolata } from "next/font/goo
 import { ThemeProvider } from "@/components/theme-provider"
 import { GeometricShapes } from "@/components/geometric-shapes"
 import { ToastProvider } from "@/components/toast-provider"
+import GoogleAnalytics from "@/components/google-analytics"
 import Script from "next/script"
+import { Suspense } from "react"
 
 // Outfit as our clean sans-serif for body text
 const outfit = Outfit({ 
@@ -120,6 +122,9 @@ export default function RootLayout({
             })
           }}
         />
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+        </Suspense>
       </head>
       <body className={`${outfit.variable} ${comfortaa.variable} ${vt323.variable} ${spaceMono.variable} ${inconsolata.variable}`}>
         <ThemeProvider
