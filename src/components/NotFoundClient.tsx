@@ -9,7 +9,7 @@ export function NotFoundClient() {
   const searchParams = useSearchParams();
   
   // Optional: Use searchParams for dynamic content
-  const referrer = searchParams.get('from') || '';
+  const referrer = searchParams?.get('from') || '';
   
   return (
     <motion.div

@@ -33,14 +33,13 @@ export function MobileNav({ items }: MobileNavProps) {
   
   // Fix: Improved active link detection
   const isActive = (href: string) => {
+    const path = pathname ?? "";
     if (href.includes("#")) {
-      if (href.startsWith("/#")) {
-        return pathname === "/" && currentHash === href.substring(1);
-      }
-      const [path, hash] = href.split("#");
-      return pathname === path && currentHash === `#${hash}`;
+      if (href.startsWith("/#")) return path === "/" && currentHash === href.substring(1);
+      const [p, hash] = href.split("#");
+      return path === p && currentHash === `#${hash}`;
     }
-    return pathname === href || pathname.startsWith(`${href}/`);
+    return path === href || path.startsWith(`${href}/`);
   };
   
   // Fix: Properly manage overflow for body when menu is open
@@ -109,7 +108,7 @@ export function MobileNav({ items }: MobileNavProps) {
         whileHover="hover"
         whileTap="tap"
         onClick={() => setOpen(true)}
-        className="md:hidden relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center ml-4 border border-border sketch-box"
+        className="md:hidden relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center ml-4 border border-border"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />
@@ -122,7 +121,8 @@ export function MobileNav({ items }: MobileNavProps) {
             animate="open"
             exit="closed"
             variants={menuVariants}
-            className="fixed inset-0 z-50 bg-background backdrop-blur-md md:hidden flex flex-col"
+            className="fixed inset-0 z-50 bg-background md:hidden flex flex-col"
+            style={{ backgroundColor: 'var(--background)' }}
           >
             <div className="relative w-full h-full flex flex-col">
               
@@ -161,7 +161,7 @@ export function MobileNav({ items }: MobileNavProps) {
                   whileHover="hover"
                   whileTap="tap"
                   onClick={() => setOpen(false)}
-                  className="relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center border border-border sketch-box"
+                  className="relative h-10 w-10 rounded-full bg-muted text-foreground flex items-center justify-center border border-border"
                   aria-label="Close menu"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -171,7 +171,7 @@ export function MobileNav({ items }: MobileNavProps) {
                 </motion.button>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center items-center px-4 overflow-y-scroll bg-background min-h-screen">
+              <div className="flex-1 flex flex-col justify-center items-center px-4 overflow-y-scroll min-h-screen" style={{ backgroundColor: 'var(--background)' }}>
                 <nav className="flex flex-col gap-6 items-center w-full">
                   {items.map((item, i) => (
                     <motion.a
@@ -235,13 +235,13 @@ export function MobileNav({ items }: MobileNavProps) {
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-lg shadow-primary/20 nerdy-font terminal-button z-10"
+                    className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-lg shadow-primary/20 nerdy-font"
                   >
                     Get in Touch
                   </motion.a>
                   
                   <motion.a
-                    href="/files/Fatma_Ali_-_Software_Engineer (3).pdf"
+                    href="/files/Fatma_Ali_Resume.pdf"
                     download
                     target="_blank"
                     variants={menuItemVariants}
@@ -249,7 +249,7 @@ export function MobileNav({ items }: MobileNavProps) {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-muted text-foreground rounded-full font-medium border border-border flex items-center gap-2 terminal-button sketch-box z-10"
+                    className="px-6 py-3 bg-muted text-foreground rounded-full font-medium border border-border flex items-center gap-2 sketch-box"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>

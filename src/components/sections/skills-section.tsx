@@ -1,136 +1,106 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GeometricShapes } from "../geometric-shapes";
 
 export function SkillsSection() {
-  const skills = [
-    { name: "React", level: 90, command: "npm install react" },
-    { name: "TypeScript", level: 85, command: "tsc --init" },
-    { name: "Angular", level: 80, command: "ng new --no-standalone" },
-    { name: "NextJS", level: 85, command: "npx create-next-app@latest" },
-    { name: "NodeJS", level: 75, command: "node -v" },
-    { name: "Git", level: 80, command: "git init" },
+  const techStack = [
+    { name: "React", category: "core", years: "4+" },
+    { name: "TypeScript", category: "core", years: "3+" },
+    { name: "Next.js", category: "core", years: "2+" },
+    { name: "Node.js", category: "backend", years: "3+" },
+    { name: "Tailwind CSS", category: "styling", years: "2+" },
+    { name: "PostgreSQL", category: "backend", years: "2+" },
+    { name: "GraphQL", category: "data", years: "2+" },
+    { name: "AWS", category: "cloud", years: "1+" },
   ];
 
+  const categories = {
+    core: { label: "Core", color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
+    backend: { label: "Backend", color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
+    styling: { label: "Styling", color: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200" },
+    data: { label: "Data", color: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" },
+    cloud: { label: "Cloud", color: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200" }
+  };
+
   return (
-    <section id="skills" className="py-16 bg-muted dark:bg-muted/10">
-      {/* Fun geometric shapes for Skills section */}
-      <GeometricShapes
-        fixed={false}
-        density={0.8}
-        section="skills"
-        opacity={0.1}
-        minSize={10}
-        maxSize={30}
-      />
+    <section id="skills" className="py-32 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
+        {/* Section title */}
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Skills</h2>
-          <div className="w-16 h-1 bg-accent mx-auto"></div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Tech I work with</h2>
+          <div className="w-16 h-0.5 bg-foreground mx-auto mb-6"></div>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Technologies I use daily to build modern web applications. Always learning, always improving.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {skills.map((skill, index) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-background rounded-lg p-4 border border-border"
-            >
-              <div className="mb-2 flex justify-between items-center">
-                <span className="font-medium font-mono text-primary">
-                  {skill.name}
-                </span>
-                <span className="text-muted-foreground font-mono">
-                  {skill.level}%
-                </span>
-              </div>
-              <div className="w-full bg-muted dark:bg-muted/30 rounded-md h-8 mb-2 border border-border overflow-hidden relative">
-                {/* Terminal header */}
-                <div className="absolute top-0 left-0 right-0 h-2 bg-card flex items-center px-1">
-                  <div className="w-1 h-1 rounded-full bg-red-500 mr-1"></div>
-                  <div className="w-1 h-1 rounded-full bg-yellow-500 mr-1"></div>
-                  <div className="w-1 h-1 rounded-full bg-green-500"></div>
-                </div>
-
-                {/* Progress bar with terminal effect */}
-                <motion.div
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${skill.level}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 2, delay: 0.2 + index * 0.1 }}
-                  className="h-full bg-gradient-to-r from-[#50fa7b] to-[#00ff00] relative mt-2"
-                >
-                  <div className="absolute inset-0 flex items-center px-2">
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 1 + index * 0.2 }}
-                      className="text-xs text-black font-mono whitespace-nowrap"
-                    >
-                      $ {skill.command}
-                    </motion.span>
-                  </div>
-                </motion.div>
-
-                {/* Terminal blinking cursor */}
-                <motion.div
-                  animate={{ opacity: [1, 0] }}
-                  transition={{ duration: 0.8, repeat: Infinity }}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-2 h-4 bg-primary"
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Technologies */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 p-6 rounded-xl bg-card border border-border shadow-sm"
-        >
-          <h3 className="text-xl font-semibold mb-6 text-center">
-            Technologies I Work With
-          </h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            {[
-              "JavaScript",
-              "TypeScript",
-              "React",
-              "Next.js",
-              "Tailwind CSS",
-              "Framer Motion",
-              "Git",
-              "GraphQL",
-              "Node.js",
-              "Figma",
-            ].map((tech, index) => (
-              <motion.span
-                key={tech}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                whileHover={{ y: -5 }}
-                className="px-4 py-2 bg-background rounded-full text-sm border border-border shadow-sm"
+        <div className="max-w-4xl mx-auto">
+          {/* Skills grid with staggered animation */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {techStack.map((skill, i) => (
+              <motion.div
+                key={skill.name}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: i * 0.1,
+                  type: "spring",
+                  stiffness: 100 
+                }}
+                whileHover={{ 
+                  y: -8, 
+                  transition: { duration: 0.2 } 
+                }}
+                className="group"
               >
-                {tech}
-              </motion.span>
+                <div className="bg-background border border-border rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
+                  <div className="mb-3">
+                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${categories[skill.category as keyof typeof categories].color}`}>
+                      {categories[skill.category as keyof typeof categories].label}
+                    </span>
+                  </div>
+                  
+                  <h3 className="font-semibold text-lg mb-2 group-hover:text-foreground transition-colors">
+                    {skill.name}
+                  </h3>
+                  
+                  <p className="text-sm text-muted-foreground">
+                    {skill.years} experience
+                  </p>
+                </div>
+              </motion.div>
             ))}
           </div>
-        </motion.div>
+
+          {/* Call to action */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="text-center mt-16"
+          >
+            <p className="text-muted-foreground mb-6">
+              Curious about a specific technology or want to discuss a project?
+            </p>
+            <motion.a
+              href="#contact"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block px-6 py-3 border border-border rounded-full font-medium hover:bg-muted/50 transition-colors"
+            >
+              Let&apos;s talk tech
+            </motion.a>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

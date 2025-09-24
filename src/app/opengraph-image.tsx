@@ -4,7 +4,7 @@ import { ImageResponse } from 'next/og'
 export const dynamic = 'force-static'
  
 // Image metadata
-export const alt = 'Fatma Ali - Frontend Engineer'
+export const alt = 'Fatma Ali - Software Engineer'
 export const size = {
   width: 1200,
   height: 630,

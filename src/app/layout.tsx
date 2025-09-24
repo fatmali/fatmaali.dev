@@ -1,87 +1,82 @@
 import "./globals.css"
-import { Outfit, Comfortaa, VT323, Space_Mono, Inconsolata } from "next/font/google"
+import { Inter, Caveat } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
-import { GeometricShapes } from "@/components/geometric-shapes"
 import { ToastProvider } from "@/components/toast-provider"
 import GoogleAnalytics from "@/components/google-analytics"
 import Script from "next/script"
 import { Suspense } from "react"
+import { MainLayout } from "@/components/layout/MainLayout"
 
-// Outfit as our clean sans-serif for body text
-const outfit = Outfit({ 
+// Inter as base and display font
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap"
+  display: "swap",
 })
 
-// Comfortaa as our fun, playful display font for headings
-const comfortaa = Comfortaa({ 
+const interDisplay = Inter({
   subsets: ["latin"],
   variable: "--font-display",
-  display: "swap"
+  display: "swap",
 })
 
-// VT323 as our nerdy font
-const vt323 = VT323({
-  weight: "400",
+// Caveat for handwritten sticky notes
+const caveat = Caveat({
   subsets: ["latin"],
-  variable: "--font-nerdy",
-  display: "swap"
-})
-
-// Space Mono as our terminal font
-const spaceMono = Space_Mono({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-terminal",
-  display: "swap"
-})
-
-// Inconsolata as our code font
-const inconsolata = Inconsolata({
-  subsets: ["latin"],
-  variable: "--font-code",
-  display: "swap"
+  variable: "--font-hand",
+  display: "swap",
 })
 
 export const metadata = {
-  title: "Fatma Ali | Frontend Engineer",
-  description: "Portfolio website for Fatma Ali, Frontend Engineer specialized in React, TypeScript, and Next.js",
+  title: "Fatma Ali | Senior Software Engineer (Microsoft M365 AI)",
+  description: "Senior Software Engineer at Microsoft (M365 AI Experiences) building AI-powered productivity and collaboration experiences with scalable systems and human-centered UX.",
   metadataBase: new URL('https://fatmaali.dev'),
-  keywords: ['Frontend Engineer', 'React', 'TypeScript', 'Next.js', 'Software Engineer', 'Web Developer', 'JavaScript', 'NodeJS'],
-  authors: [{ name: 'Fatma Ali' }],
+  keywords: [
+    'Senior Software Engineer','Microsoft','M365 AI','AI Productivity','AI Collaboration','React','TypeScript','Next.js','Web Performance','Scalable Systems','Cloud Architecture','User Experience','Portfolio'
+  ],
+  category: 'technology',
+  authors: [{ name: 'Fatma Ali', url: 'https://fatmaali.dev' }],
   creator: 'Fatma Ali',
   publisher: 'Fatma Ali',
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    }
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://fatmaali.dev',
-    title: 'Fatma Ali | Frontend Engineer',
-    description: 'Portfolio website for Fatma Ali, Frontend Engineer specialized in React, TypeScript, and Next.js',
+    title: 'Fatma Ali | Senior Software Engineer (Microsoft M365 AI)',
+    description: 'AI-powered productivity & collaboration experiences. React, TypeScript, Next.js, scalable systems.',
     siteName: 'Fatma Ali Portfolio',
     images: [
       {
-        url: '/public/images/headshot.JPG',
+        url: '/images/headshot.JPG',
         width: 1200,
         height: 630,
-        alt: 'Fatma Ali - Frontend Engineer',
+        alt: 'Fatma Ali - Senior Software Engineer',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fatma Ali | Frontend Engineer',
-    description: 'Portfolio website for Fatma Ali, Frontend Engineer specialized in React, TypeScript, and Next.js',
-    images: ['/public/images/headshot.JPG'],
-    creator: '@fatmali',
+    site: '@_fatmali',
+    creator: '@_fatmali',
+    title: 'Fatma Ali | Senior Software Engineer (Microsoft M365 AI)',
+    description: 'AI-powered productivity & collaboration engineering. React • TypeScript • Next.js • Scalable systems.',
+    images: ['/images/headshot.JPG']
   },
   alternates: {
     canonical: 'https://fatmaali.dev',
   },
+  manifest: '/site.webmanifest'
 }
 
 export default function RootLayout({
@@ -96,48 +91,63 @@ export default function RootLayout({
           id="json-ld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              "name": "Fatma Ali",
-              "url": "https://fatmaali.dev",
-              "image": "https://fatmaali.dev/images/headshot.JPG",
-              "jobTitle": "Frontend Engineer",
-              "worksFor": {
-                "@type": "Organization",
-                "name": "Microsoft"
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Person',
+                name: 'Fatma Ali',
+                url: 'https://fatmaali.dev',
+                image: 'https://fatmaali.dev/images/headshot.JPG',
+                jobTitle: 'Senior Software Engineer',
+                worksFor: {
+                  '@type': 'Organization',
+                  name: 'Microsoft',
+                  department: 'M365 AI Experiences'
+                },
+                alumniOf: [
+                  {
+                    '@type': 'CollegeOrUniversity',
+                    name: 'University of Eldoret'
+                  }
+                ],
+                knowsAbout: [
+                  'AI Productivity','AI Collaboration','React','TypeScript','Next.js','Scalable Systems','Web Performance','Cloud Architecture','User Experience'
+                ],
+                sameAs: [
+                  'https://github.com/fatmali',
+                  'https://linkedin.com/in/fatmali',
+                  'https://x.com/_fatmali'
+                ]
               },
-              "alumniOf": [
-                {
-                  "@type": "CollegeOrUniversity",
-                  "name": "University of Eldoret"
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'Fatma Ali Portfolio',
+                url: 'https://fatmaali.dev',
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: 'https://fatmaali.dev/search?q={search_term_string}',
+                  'query-input': 'required name=search_term_string'
                 }
-              ],
-              "knowsAbout": ["React", "TypeScript", "Next.js", "JavaScript", "Frontend Development"],
-              "sameAs": [
-                "https://github.com/fatmali",
-                "https://linkedin.com/in/fatmali",
-                "https://x.com/_fatmali"
-              ]
-            })
+              }
+            ])
           }}
         />
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
       </head>
-      <body className={`${outfit.variable} ${comfortaa.variable} ${vt323.variable} ${spaceMono.variable} ${inconsolata.variable}`}>
+      <body className={`${inter.variable} ${interDisplay.variable} ${caveat.variable}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {/* Geometric shapes background */}
-          <GeometricShapes />
-          
-          {/* Page content */}
-          {children}
+          {/* Clean page background (no geometric shapes) */}
+          <MainLayout>
+            {children}
+          </MainLayout>
           
           {/* Toast notifications */}
           <ToastProvider />

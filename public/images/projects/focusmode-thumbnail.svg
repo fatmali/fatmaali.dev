@@ -1,0 +1,41 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a2332;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="card-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#374151;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4b5563;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bg-gradient)"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="400" height="60" fill="#1f2937"/>
+  <text x="20" y="35" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">🎯 FocusMode</text>
+  <text x="320" y="35" fill="#9ca3af" font-family="Arial, sans-serif" font-size="12">Get Started</text>
+  
+  <!-- Main content -->
+  <rect x="40" y="80" width="120" height="20" rx="10" fill="#374151"/>
+  <text x="50" y="95" fill="white" font-family="Arial, sans-serif" font-size="10">Special for ADHD/ADD brains</text>
+  
+  <text x="40" y="130" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">Productivity that</text>
+  <text x="40" y="155" fill="#60a5fa" font-family="Arial, sans-serif" font-size="24" font-weight="bold">adapts to your brain</text>
+  
+  <!-- Task cards -->
+  <rect x="40" y="180" width="150" height="80" rx="8" fill="url(#card-gradient)" stroke="#4b5563"/>
+  <text x="50" y="200" fill="#9ca3af" font-family="Arial, sans-serif" font-size="10">NEURAL DOPAMINE SYSTEM</text>
+  <text x="50" y="220" fill="white" font-family="Arial, sans-serif" font-size="12">Steps</text>
+  <text x="160" y="220" fill="#9ca3af" font-family="Arial, sans-serif" font-size="10">2/4 completed</text>
+  <rect x="50" y="230" width="80" height="4" rx="2" fill="#374151"/>
+  <rect x="50" y="230" width="40" height="4" rx="2" fill="#60a5fa"/>
+  
+  <rect x="210" y="180" width="150" height="80" rx="8" fill="url(#card-gradient)" stroke="#4b5563"/>
+  <text x="220" y="200" fill="#9ca3af" font-family="Arial, sans-serif" font-size="10">CUSTOM FOCUS PROFILES</text>
+  <text x="220" y="220" fill="white" font-family="Arial, sans-serif" font-size="12">Choose your focus style:</text>
+  <text x="230" y="235" fill="#9ca3af" font-family="Arial, sans-serif" font-size="10">Beginner</text>
+  <text x="230" y="250" fill="#9ca3af" font-family="Arial, sans-serif" font-size="10">15 min focus / 5 min break</text>
+</svg>

@@ -11,7 +11,7 @@ export default function BlogHeader() {
     >
       <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
       <p className="text-xl text-muted-foreground max-w-2xl">
-        Thoughts, insights, and technical articles about frontend development,
+        Thoughts, insights, and technical articles about software development,
         React, Next.js, and modern web technologies.
       </p>
     </motion.div>

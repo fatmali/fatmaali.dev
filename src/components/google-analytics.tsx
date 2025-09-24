@@ -102,7 +102,7 @@ function AnalyticsHandler() {
     if (!GA_MEASUREMENT_ID) return;
     
     // When the route changes, log a page view
-    const url = pathname + searchParams.toString();
+    const url = pathname + (searchParams ? `?${searchParams.toString()}` : '');
     pageview(url);
   }, [pathname, searchParams]);
 
