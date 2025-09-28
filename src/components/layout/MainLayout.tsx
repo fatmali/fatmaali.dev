@@ -5,8 +5,8 @@ import { MobileNav } from "@/components/mobile-nav";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname,  } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+// (Removed hash tracking hooks)
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -14,37 +14,20 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const pathname = usePathname();
-  const [currentHash, setCurrentHash] = useState("");
+  // hash tracking no longer needed now that we use dedicated routes
   
   const navItems = [
-    { name: "About", href: "/#about" },
+    { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
-    { name: "Projects", href: "/braindump" },
-    { name: "Contact", href: "/#contact" },
+    // { name: "Projects", href: "/braindump" },
+    { name: "Contact", href: "/contact" },
   ];
 
   const isActive = (href: string) => {
     const path = pathname ?? "";
-    if (href.includes("#")) {
-      if (href.startsWith("/#")) {
-        return path === "/" && currentHash === href.substring(1);
-      }
-      const [p, hash] = href.split("#");
-      return path === p && currentHash === `#${hash}`;
-    }
     return path === href || path.startsWith(`${href}/`);
   };
 
-    useEffect(() => {
-      setCurrentHash(window.location.hash);
-      
-      const handleHashChange = () => {
-        setCurrentHash(window.location.hash);
-      };
-      
-      window.addEventListener("hashchange", handleHashChange);
-      return () => window.removeEventListener("hashchange", handleHashChange);
-    }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -61,11 +44,19 @@ export function MainLayout({ children }: MainLayoutProps) {
           </motion.div>
 
           <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
-              <motion.a key={item.name} href={item.href} whileHover={{ y: -1 }} className={`text-sm text-muted-foreground hover:text-foreground transition-colors ${isActive(item.href) ? "text-foreground" : ""}`}>
-                {item.name}
-              </motion.a>
-            ))}
+            {navItems.map((item) => {
+              const activeCls = isActive(item.href) ? "text-foreground" : "";
+              return (
+                <motion.span key={item.name} whileHover={{ y: -1 }}>
+                  <Link
+                    href={item.href}
+                    className={`text-sm text-muted-foreground hover:text-foreground transition-colors ${activeCls}`}
+                  >
+                    {item.name}
+                  </Link>
+                </motion.span>
+              );
+            })}
             <motion.a 
               href="/files/Fatma_Ali_Resume.pdf" 
               download 
@@ -114,7 +105,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               <ul className="space-y-2">
                 {navItems.map((item) => (
                   <li key={item.name}>
-                    <a href={item.href} className="text-sm text-muted-foreground hover:text-foreground">{item.name}</a>
+                    <Link href={item.href} className="text-sm text-muted-foreground hover:text-foreground">{item.name}</Link>
                   </li>
                 ))}
               </ul>
@@ -130,7 +121,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+          <div className="pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
             <span>© {new Date().getFullYear()} Fatma Ali</span>
             <span>Built with Next.js & Tailwind</span>
           </div>

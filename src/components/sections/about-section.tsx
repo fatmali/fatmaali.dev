@@ -1,6 +1,12 @@
+"use client";
+
 import { motion } from "framer-motion";
 
-export function AboutSection() {
+interface AboutSectionProps {
+  ctaHref?: string; // default '#contact' for backward compatibility
+}
+
+export function AboutSection({ ctaHref = '#contact' }: AboutSectionProps) {
   return (
     <section className="py-32 relative bg-muted/20" id="about">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,7 +84,7 @@ export function AboutSection() {
           >
             <p className="text-muted-foreground mb-4">Want to work together or just chat about software?</p>
             <motion.a 
-              href="#contact"
+              href={ctaHref}
               whileHover={{ y: -2 }}
               whileTap={{ y: 0 }}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-medium hover:bg-foreground/90 transition-colors"

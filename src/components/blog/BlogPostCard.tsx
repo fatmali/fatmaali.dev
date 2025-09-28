@@ -11,6 +11,7 @@ interface BlogPostCardProps {
 }
 
 export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
+  const imgSrc = post.image || `/api/og?title=${encodeURIComponent(post.title)}`;
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -19,8 +20,8 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
       className="bg-card text-card-foreground rounded-lg overflow-hidden border border-border flex flex-col h-full"
     >
       <Link href={`/blog/${post.slug}`} className="block h-48 relative overflow-hidden">
-        <Image 
-          src={post.image}
+        <Image
+          src={imgSrc}
           alt={post.title}
           fill
           className="object-cover hover:scale-105 transition-transform duration-300"

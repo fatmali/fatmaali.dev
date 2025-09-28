@@ -4,6 +4,7 @@ import * as React from "react"
 import { Menu } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { usePathname } from "next/navigation"
+import Link from "next/link"
 
 interface MobileNavProps {
   items: {
@@ -173,72 +174,77 @@ export function MobileNav({ items }: MobileNavProps) {
 
               <div className="flex-1 flex flex-col justify-center items-center px-4 overflow-y-scroll min-h-screen" style={{ backgroundColor: 'var(--background)' }}>
                 <nav className="flex flex-col gap-6 items-center w-full">
-                  {items.map((item, i) => (
-                    <motion.a
-                      key={item.name}
-                      custom={i}
-                      variants={menuItemVariants}
-                      href={item.href}
-                      onClick={(e) => {
-                        if (item.href.includes('#')) {
-                          const targetId = item.href.split('#')[1];
-                          const targetElement = document.getElementById(targetId);
-                          if (targetElement) {
-                            e.preventDefault();
-                            setOpen(false);
-                            setTimeout(() => {
-                              targetElement.scrollIntoView({ behavior: 'smooth' });
-                              window.location.hash = '#' + targetId;
-                            }, 300);
-                          } else {
-                            setOpen(false);
-                          }
-                        } else {
-                          setOpen(false);
-                        }
-                      }}
-                      className={`text-2xl font-medium transition-colors relative group nerdy-font z-10 ${
-                        isActive(item.href)
-                          ? "text-primary" 
-                          : "hover:text-primary"
-                      }`}
-                    >
-                      {item.name}
-                      <motion.span 
-                        className={`absolute -bottom-2 left-0 ${
-                          isActive(item.href) 
-                            ? "w-full h-1 bg-primary" 
-                            : "w-0 h-1 bg-gradient-to-r from-primary to-accent group-hover:w-full"
-                        }`}
-                        transition={{ duration: 0.3 }}
-                      />
-                    </motion.a>
-                  ))}
+                  {items.map((item, i) => {
+                    const active = isActive(item.href);
+                    const baseClasses = `text-2xl font-medium transition-colors relative group nerdy-font z-10 ${active ? "text-primary" : "hover:text-primary"}`;
+                    // Keep hash links as anchors for smooth scrolling; use Link for normal routes
+                    if (item.href.includes('#')) {
+                      return (
+                        <motion.a
+                          key={item.name}
+                          custom={i}
+                          variants={menuItemVariants}
+                          href={item.href}
+                          onClick={(e) => {
+                            const targetId = item.href.split('#')[1];
+                            const targetElement = document.getElementById(targetId);
+                            if (targetElement) {
+                              e.preventDefault();
+                              setOpen(false);
+                              setTimeout(() => {
+                                targetElement.scrollIntoView({ behavior: 'smooth' });
+                                window.location.hash = '#' + targetId;
+                              }, 300);
+                            } else {
+                              setOpen(false);
+                            }
+                          }}
+                          className={baseClasses}
+                        >
+                          {item.name}
+                          <motion.span 
+                            className={`absolute -bottom-2 left-0 ${
+                              active 
+                                ? "w-full h-1 bg-primary" 
+                                : "w-0 h-1 bg-gradient-to-r from-primary to-accent group-hover:w-full"
+                            }`}
+                            transition={{ duration: 0.3 }}
+                          />
+                        </motion.a>
+                      );
+                    }
+                    return (
+                      <motion.div key={item.name} custom={i} variants={menuItemVariants}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className={baseClasses}
+                        >
+                          {item.name}
+                          <motion.span 
+                            className={`absolute -bottom-2 left-0 ${
+                              active 
+                                ? "w-full h-1 bg-primary" 
+                                : "w-0 h-1 bg-gradient-to-r from-primary to-accent group-hover:w-full"
+                            }`}
+                            transition={{ duration: 0.3 }}
+                          />
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
                 </nav>
                 
                 <div className="mt-12 flex flex-col gap-6 items-center">
-                  <motion.a
-                    href="/#contact"
-                    variants={menuItemVariants}
-                    custom={items.length}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setOpen(false);
-                      // Wait for menu close animation
-                      setTimeout(() => {
-                        const contactSection = document.getElementById("contact");
-                        if (contactSection) {
-                          contactSection.scrollIntoView({ behavior: 'smooth' });
-                          window.location.hash = '#contact';
-                        }
-                      }, 300);
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-lg shadow-primary/20 nerdy-font"
-                  >
-                    Get in Touch
-                  </motion.a>
+                  <motion.div variants={menuItemVariants} custom={items.length}>
+                    <Link
+                      href="/contact"
+                      onClick={() => setOpen(false)}
+                      className="px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium shadow-lg shadow-primary/20 nerdy-font inline-block"
+                    >
+                      Get in Touch
+                    </Link>
+                  </motion.div>
                   
                   <motion.a
                     href="/files/Fatma_Ali_Resume.pdf"

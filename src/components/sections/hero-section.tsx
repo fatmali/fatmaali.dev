@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { StickyNote } from "../ui/StickyNote";
+import Link from "next/link";
 
 export function HeroSection() {
   const scrollToAbout = () => {
@@ -50,12 +51,12 @@ export function HeroSection() {
             GitHub
           </a>
           <span>•</span>
-          <a
+          <Link
             href="/blog"
             className="underline-offset-4 hover:underline"
           >
             Blog
-          </a>
+          </Link>
           <span>•</span>
           <a
             href="mailto:ping@fatmaali.dev"

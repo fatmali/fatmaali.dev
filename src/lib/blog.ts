@@ -12,11 +12,13 @@ export interface BlogPost {
   slug: string;
   title: string;
   description: string;
-  date: string;
-  formattedDate: string;
+  date: string;              // ISO publish date
+  formattedDate: string;     // Human readable date
+  updated?: string;          // Optional ISO updated/modified date
   readTime: string;
   image: string;
   tags: string[];
+  keywords?: string[];       // Optional keyword list for SEO
   content: string;
   author: string;
 }
@@ -40,9 +42,11 @@ export async function getAllPosts(): Promise<BlogPost[]> {
         description: data.description,
         date: data.date,
         formattedDate: format(parseISO(data.date), 'MMMM d, yyyy'),
+        updated: data.updated || data.date,
         readTime: data.readTime || '5 min read', // Default read time
         image: data.image || '/images/blog/default.jpg', // Default image
         tags: data.tags || [],
+        keywords: data.keywords || data.tags || [],
         content,
         author: data.author || 'Fatma Ali', // Default author
       };
@@ -76,12 +80,14 @@ export async function getPostBySlug(slug: string): Promise<{ post: BlogPost, mdx
     description: data.description,
     date: data.date,
     formattedDate: format(parseISO(data.date), 'MMMM d, yyyy'),
+    updated: data.updated || data.date,
     readTime: data.readTime || '5 min read',
     image: data.image || '/images/blog/default.jpg',
     tags: data.tags || [],
+    keywords: data.keywords || data.tags || [],
     content,
     author: data.author || 'Fatma Ali',
-  };
+  } as BlogPost;
   
   return { post, mdxSource };
 }

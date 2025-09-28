@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,6 +10,7 @@ interface BlogPostHeaderProps {
 }
 
 export default function BlogPostHeader({ post }: BlogPostHeaderProps) {
+  const imgSrc = post.image || `/api/og?title=${encodeURIComponent(post.title)}`;
   return (
     <motion.header 
       className="mb-10"
@@ -31,23 +34,15 @@ export default function BlogPostHeader({ post }: BlogPostHeaderProps) {
       
       <h1 className="text-4xl md:text-5xl font-bold mb-4">{post.title}</h1>
       
-      <div className="flex items-center text-muted-foreground mb-6">
+      <div className="flex items-center text-muted-foreground mb-8">
         <span>{post.formattedDate}</span>
         <span className="mx-2">•</span>
         <span>{post.readTime}</span>
       </div>
       
-      <div className="flex flex-wrap gap-2 mb-8">
-        {post.tags.map(tag => (
-          <span key={tag} className="px-2 py-1 bg-muted text-xs rounded-md">
-            {tag}
-          </span>
-        ))}
-      </div>
-      
       <div className="relative h-72 w-full mb-8 rounded-lg overflow-hidden">
-        <Image 
-          src={post.image}
+        <Image
+          src={imgSrc}
           alt={post.title}
           fill
           className="object-cover"
