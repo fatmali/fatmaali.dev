@@ -20,6 +20,8 @@ export function MainLayout({ children }: MainLayoutProps) {
     { name: "Projects", href: "/#projects" },
     { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
+  { name: "Music", href: "/ai-beats" },
+    // { name: "Projects", href: "/braindump" },
     { name: "Contact", href: "/contact" },
   ];
 

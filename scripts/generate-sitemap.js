@@ -8,8 +8,11 @@ const baseUrl = 'https://fatmaali.dev';
 // Define your routes - add all the routes in your Next.js app
 const routes = [
   '/',
+  '/about',
   '/blog',
-  // Add other routes as needed
+  '/ai-beats',
+  '/contact',
+  '/braindump',
 ];
 
 // Generate sitemap XML

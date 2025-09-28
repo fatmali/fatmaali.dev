@@ -1,6 +1,5 @@
-import BlogHeader from "@/components/blog/BlogHeader";
 import { getAllPosts } from "@/lib/blog";
-import BlogListClient from '@/components/blog/BlogListClient';
+import BlogPageClient from "@/components/blog/BlogPageClient";
 import { Metadata } from "next";
 import Script from 'next/script';
 
@@ -26,7 +25,6 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const posts = await getAllPosts();
-
   return (
     <>
       <Script
@@ -42,12 +40,7 @@ export default async function BlogPage() {
           })
         }}
       />
-      <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 container mx-auto">
-        <BlogHeader />
-      </section>
-      <section className="pb-32 px-4 sm:px-6 lg:px-8 container mx-auto">
-        <BlogListClient posts={posts} />
-      </section>
+      <BlogPageClient posts={posts} />
     </>
   );
 }

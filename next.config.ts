@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
   },
   // Environment variables that will be available on the client
   env: {
-    NEXT_PUBLIC_FUNCTION_APP_URL: process.env.FUNCTION_APP_URL || '',
+    NEXT_PUBLIC_FUNCTION_APP_URL: process.env.NEXT_PUBLIC_FUNCTION_APP_URL || '',
   },
 };
 
