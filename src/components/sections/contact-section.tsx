@@ -51,9 +51,20 @@ export function ContactSection() {
 
     try {
       setIsSubmitting(true);
-      const apiBaseUrl = process.env.NEXT_PUBLIC_FUNCTION_APP_URL || "";
-      const apiEndpoint = apiBaseUrl || "{{AZURE_FUNCTION_URL}}";
-      const apiUrl = `${apiEndpoint}/send-email`;
+
+      const configuredBase = process.env.NEXT_PUBLIC_FUNCTION_APP_URL?.trim().replace(/\/+$/, "");
+      const localhostHosts = ["localhost", "127.0.0.1", "[::1]"];
+      const isBrowser = typeof window !== "undefined";
+      const isLocalConfigured = configuredBase
+        ? localhostHosts.some((host) => configuredBase.includes(host))
+        : false;
+      const isLocalContext = isBrowser
+        ? localhostHosts.includes(window.location.hostname)
+        : false;
+      const baseEndpoint = !configuredBase || (!isLocalContext && isLocalConfigured)
+        ? "/api"
+        : configuredBase;
+      const apiUrl = baseEndpoint === "/api" ? "/api/send-email" : `${baseEndpoint}/send-email`;
 
       const response = await fetch(apiUrl, {
         method: "POST",

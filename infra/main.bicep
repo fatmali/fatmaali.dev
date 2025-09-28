@@ -26,6 +26,10 @@ param turnstilePublicKey string
 @secure()
 param publicGaMeasurementId string
 
+// Allow disabling custom domain binding on initial provision to avoid transient CNAME validation errors.
+@description('Set to false to skip creating custom domain bindings (fatmaali.dev and www) during initial provisioning.')
+param enableCustomDomains bool = true
+
 resource staticWebApp 'Microsoft.Web/staticSites@2024-04-01' = {
   name: 'swa-${resourceToken}'
   location: location
@@ -225,7 +229,8 @@ resource apexValidationTxtRecord 'Microsoft.Network/dnsZones/TXT@2018-05-01' = {
 }
 
 // Custom domain configuration for the Static Web App
-resource customDomain 'Microsoft.Web/staticSites/customDomains@2023-01-01' = {
+// Custom domain for apex (conditional)
+resource customDomain 'Microsoft.Web/staticSites/customDomains@2023-01-01' = if (enableCustomDomains) {
   parent: staticWebApp
   name: domainName
   properties: {
@@ -240,7 +245,8 @@ resource customDomain 'Microsoft.Web/staticSites/customDomains@2023-01-01' = {
 }
 
 // Custom domain configuration for www subdomain
-resource wwwCustomDomain 'Microsoft.Web/staticSites/customDomains@2023-01-01' = {
+// Custom domain for www (conditional)
+resource wwwCustomDomain 'Microsoft.Web/staticSites/customDomains@2023-01-01' = if (enableCustomDomains) {
   parent: staticWebApp
   name: '${wwwSubdomain}.${domainName}'
   properties: {

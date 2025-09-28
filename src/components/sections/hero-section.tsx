@@ -22,7 +22,7 @@ export function HeroSection() {
           transition={{ duration: 0.5, delay: 0.05 }}
           className="text-center font-extrabold leading-tight mx-auto max-w-4xl text-3xl sm:text-4xl md:text-6xl"
         >
-          Senior Software Engineer at Microsoft (M365 AI Experiences), building AI-powered productivity experiences.
+           Software Engineer building AI-powered productivity experiences.
         </motion.h1>
 
         {/* Links row */}

@@ -6,7 +6,7 @@ services:
     project: .
     language: ts
     host: staticwebapp
-    dist: .next
+    dist: out
   api:
     project: api
     language: ts

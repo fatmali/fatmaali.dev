@@ -3,12 +3,8 @@
   "configurations": {
     "fatmaali.dev": {
       "appLocation": ".",
-      "apiLocation": "api",
-      "outputLocation": ".next",
-      "apiLanguage": "node",
-      "apiVersion": "16",
+      "outputLocation": "out",
       "appBuildCommand": "npm run build",
-      "apiBuildCommand": "npm run build --if-present",
       "run": "npm run dev",
       "appDevserverUrl": "http://localhost:3000",
       "appName": "swa-i75tzybi6yxls",
