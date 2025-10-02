@@ -306,10 +306,10 @@ export function ContactSection() {
                     name="subject"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-2xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-foreground/30 transition-colors"
+                    className="w-full px-4 py-3 pr-10 rounded-2xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-foreground/30 transition-colors cursor-pointer hover:border-foreground/50 [&>option]:bg-background [&>option]:text-foreground [&>option]:py-2"
                   >
-                    <option value="project">Project Inquiry</option>
                     <option value="collaboration">Collaboration</option>
+                    <option value="project">Project Inquiry</option>
                     <option value="other">Other</option>
                   </select>
                 </motion.div>
