@@ -57,3 +57,14 @@ html, body {
 
 /* Keep a simple utility for a hand font (notes) */
 .font-hand { font-family: var(--font-hand, var(--font-display)); }
+
+/* Fix select dropdown options visibility */
+select option {
+  background-color: var(--background);
+  color: var(--foreground);
+  padding: 8px 12px;
+}
+
+select {
+  color-scheme: light dark;
+}
