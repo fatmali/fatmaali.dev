@@ -11,11 +11,20 @@ interface CalloutProps {
   icon?: string;
 }
 
+// Revised styling: neutral background + accent bar for contrast in light mode.
+// Avoid low-contrast pastel-on-pale; body text always uses standard foreground.
 const styles: Record<Exclude<CalloutVisual, 'warning'>, string> = {
-  info: 'border-sky-500/60 bg-sky-500/7 text-sky-400',
-  success: 'border-emerald-500/60 bg-emerald-500/7 text-emerald-400',
-  warn: 'border-amber-500/60 bg-amber-500/7 text-amber-400',
-  danger: 'border-rose-500/60 bg-rose-500/7 text-rose-400'
+  info: 'border-sky-400/50 before:bg-sky-500',
+  success: 'border-emerald-400/50 before:bg-emerald-500',
+  warn: 'border-amber-400/60 before:bg-amber-500',
+  danger: 'border-rose-400/60 before:bg-rose-500'
+};
+
+const accentText: Record<Exclude<CalloutVisual, 'warning'>, string> = {
+  info: 'text-sky-600 dark:text-sky-300',
+  success: 'text-emerald-600 dark:text-emerald-300',
+  warn: 'text-amber-600 dark:text-amber-300',
+  danger: 'text-rose-600 dark:text-rose-300'
 };
 
 export default function Callout({ children, type = 'info', title, icon }: PropsWithChildren<CalloutProps>) {
@@ -23,18 +32,21 @@ export default function Callout({ children, type = 'info', title, icon }: PropsW
   return (
     <div
       className={cn(
-        'my-6 flex w-full items-start gap-3 rounded-md border px-4 py-3 text-sm leading-relaxed backdrop-blur-sm shadow-sm',
+        'relative my-6 flex w-full items-start gap-3 rounded-md border px-5 py-4 text-sm leading-relaxed shadow-sm bg-muted/60 dark:bg-muted/30 text-foreground before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:rounded-l-md',
         styles[type] ?? styles.info
       )}
     >
       {icon && (
-        <span className="select-none text-xl leading-none pt-0.5" aria-hidden>
+        <span className={cn('select-none text-xl leading-none pt-0.5', accentText[type] ?? accentText.info)} aria-hidden>
           {icon}
         </span>
       )}
-      <div className="flex-1 space-y-1 text-base text-foreground/90 dark:text-white/80">
+      <div className="flex-1 space-y-1 text-base">
         {title && (
-          <div className="font-semibold uppercase tracking-wide text-[0.65rem] sm:text-[0.7rem] opacity-90">
+          <div className={cn(
+            'font-semibold uppercase tracking-wide text-[0.65rem] sm:text-[0.7rem]',
+            accentText[type] ?? accentText.info
+          )}>
             {title}
           </div>
         )}

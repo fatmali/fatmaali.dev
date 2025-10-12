@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { HeroSection } from '@/components/sections/hero-section';
 import { ProjectsSection } from '@/components/sections/projects-section';
 import { AboutSection } from '@/components/sections/about-section';
+import BlogPageClient from '@/components/blog/BlogPageClient';
 
 export const metadata: Metadata = {
 	title: 'Fatma Ali — Senior Software Engineer',
