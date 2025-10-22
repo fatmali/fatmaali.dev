@@ -32,15 +32,9 @@ export default function BlogPostHeader({ post }: BlogPostHeaderProps) {
         <span>{post.title}</span>
       </motion.div>
       
-      <h1 className="text-4xl md:text-5xl font-bold mb-4">{post.title}</h1>
-      
-      <div className="flex items-center text-muted-foreground mb-8">
-        <span>{post.formattedDate}</span>
-        <span className="mx-2">•</span>
-        <span>{post.readTime}</span>
-      </div>
-      
-      <div className="relative h-72 w-full mb-8 rounded-lg overflow-hidden">
+      {/* Hero section with background image */}
+      <div className="relative h-80 w-full mb-8 rounded-lg overflow-hidden">
+        {/* Background Image */}
         <Image
           src={imgSrc}
           alt={post.title}
@@ -49,6 +43,22 @@ export default function BlogPostHeader({ post }: BlogPostHeaderProps) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 720px, 1200px"
           priority
         />
+        
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        
+        {/* Content */}
+        <div className="relative h-full flex flex-col items-center justify-center text-center p-8 md:p-12">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white max-w-4xl">
+            {post.title}
+          </h1>
+          
+          <div className="flex items-center text-gray-200">
+            <span>{post.formattedDate}</span>
+            <span className="mx-2">•</span>
+            <span>{post.readTime}</span>
+          </div>
+        </div>
       </div>
     </motion.header>
   );

@@ -5,10 +5,12 @@ import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 import Image from 'next/image';
 import 'highlight.js/styles/atom-one-dark.css';
 import Callout from './Callout';
+import { StateMachineVisualizer } from './StateMachineVisualizer';
 import { slugify } from '@/utils/cn';
 
 const components = {
   Callout,
+  StateMachineVisualizer,
   table: (props: React.HTMLProps<HTMLTableElement>) => (
     <div className="my-6 overflow-x-auto rounded-xl border border-border/40 shadow-sm bg-gradient-to-b from-background to-background/60 backdrop-blur">
       <table
@@ -37,6 +39,13 @@ const components = {
       <a href={`#${id}`}>{children}</a>
       <span className="opacity-0 group-hover:opacity-60 ml-2 text-primary/60">#</span>
     </h3>;
+  },
+  h4: ({ children, ...rest }: React.HTMLProps<HTMLHeadingElement>) => {
+    const id = slugify(String(children));
+    return <h4 id={id} {...rest} className="group scroll-mt-28 text-lg font-semibold mt-6 mb-2 text-foreground/90">
+      <a href={`#${id}`}>{children}</a>
+      <span className="opacity-0 group-hover:opacity-60 ml-2 text-primary/60">#</span>
+    </h4>;
   },
   p: (props: React.HTMLProps<HTMLParagraphElement>) => <p {...props} className="mb-4 leading-relaxed" />,
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (

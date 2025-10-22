@@ -41,7 +41,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
         title: data.title,
         description: data.description,
         date: data.date,
-        formattedDate: format(parseISO(data.date), 'MMMM d, yyyy'),
+        formattedDate: data.date ? format(parseISO(data.date), 'MMMM d, yyyy') : 'No date',
         updated: data.updated || data.date,
         readTime: data.readTime || '5 min read', // Default read time
         image: data.image || '/images/blog/default.jpg', // Default image
@@ -79,7 +79,7 @@ export async function getPostBySlug(slug: string): Promise<{ post: BlogPost, mdx
     title: data.title,
     description: data.description,
     date: data.date,
-    formattedDate: format(parseISO(data.date), 'MMMM d, yyyy'),
+    formattedDate: data.date ? format(parseISO(data.date), 'MMMM d, yyyy') : 'No date',
     updated: data.updated || data.date,
     readTime: data.readTime || '5 min read',
     image: data.image || '/images/blog/default.jpg',

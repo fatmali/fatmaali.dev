@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-  "postbuild": "node scripts/generate-sitemap.js && cp public/sitemap.xml out/sitemap.xml || true",
+    "postbuild": "node scripts/generate-sitemap.js && cp public/sitemap.xml out/sitemap.xml || true",
     "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next out",
@@ -31,7 +31,8 @@
     "react-google-recaptcha": "^3.1.0",
     "react-hot-toast": "^2.5.2",
     "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "xstate": "^5.23.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

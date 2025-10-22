@@ -94,10 +94,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const related = await getRelatedPosts(slug, 2);
     const toc: TocItem[] = post.content
       .split('\n')
-      .filter(l => /^##\s+/.test(l) || /^###\s+/.test(l))
+      .filter(l => /^##\s+/.test(l) || /^###\s+/.test(l) || /^####\s+/.test(l))
       .map(l => {
-        const level = l.startsWith('###') ? 3 : 2;
-        const text = l.replace(/^###?\s+/, '').trim();
+        const level = l.startsWith('####') ? 4 : l.startsWith('###') ? 3 : 2;
+        const text = l.replace(/^####?\s+/, '').replace(/^###?\s+/, '').replace(/^##\s+/, '').trim();
         return { id: slugify(text), text, level };
       });
     return (

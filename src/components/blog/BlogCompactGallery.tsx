@@ -3,11 +3,10 @@
 import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import type { BlogPost } from "@/lib/blog";
 
 interface BlogCompactGalleryProps { posts: BlogPost[]; query?: string }
-
-
 
 export default function BlogCompactGallery({ posts, query: externalQuery }: BlogCompactGalleryProps) {
   const query = externalQuery ?? "";
@@ -49,7 +48,7 @@ export default function BlogCompactGallery({ posts, query: externalQuery }: Blog
           <motion.div
             key="grid"
             layout
-            className="grid gap-6 md:grid-cols-2 xl:grid-cols-3"
+            className="grid gap-6 md:grid-cols-2 lg:gap-8"
           >
             {filtered.map((post, i) => {
               return (
@@ -59,36 +58,67 @@ export default function BlogCompactGallery({ posts, query: externalQuery }: Blog
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -16 }}
                   transition={{ duration: 0.45, delay: i * 0.05 }}
-                  className="group relative rounded-3xl border border-border/70 bg-background/90 p-5 md:p-6 flex flex-col gap-4 shadow-sm shadow-primary/5 transition hover:shadow-md hover:border-primary/50"
+                  className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card hover:bg-card/95 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30"
                 >
-                  <div className="relative z-10 flex flex-col gap-3">
-                    <div className="flex items-center justify-between text-[10px] md:text-[11px] uppercase tracking-[0.35em] text-muted-foreground/70">
-                      <span className="truncate max-w-[55%]" title={post.formattedDate}>{post.formattedDate}</span>
-                      <span>{post.readTime}</span>
+                  <Link href={`/blog/${post.slug}`} className="block">
+                    {/* Image Section */}
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                      {/* Overlay gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent opacity-60" />
                     </div>
-                    <h2 className="text-base font-semibold leading-snug md:text-lg lg:text-xl">
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="inline-block text-foreground/90 hover:text-primary transition-colors drop-shadow-sm"
-                      >
+
+                    {/* Content Section */}
+                    <div className="p-6 space-y-4">
+                      {/* Meta info */}
+                      <div className="flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+                        <time dateTime={post.date} className="font-medium">
+                          {post.formattedDate}
+                        </time>
+                        <span className="text-muted-foreground/40">•</span>
+                        <span>{post.readTime}</span>
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="text-xl font-bold leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-2">
                         {post.title}
-                      </Link>
-                    </h2>
-                  </div>
-                  <div className="relative z-10 mt-auto pt-1">
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      aria-label={`Read article ${post.title}`}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary via-primary/90 to-primary/70 text-primary-foreground px-5 py-2 text-[11px] font-semibold tracking-[0.25em] shadow-md shadow-primary/30 ring-1 ring-primary/50 transition hover:shadow-lg hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background"
-                    >
-                      <span className="relative flex h-2 w-2">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-foreground/80 opacity-70" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-primary-foreground" />
-                      </span>
-                      <span>Read</span>
-                      <span className="text-xs">→</span>
-                    </Link>
-                  </div>
+                      </h2>
+
+                      {/* Description */}
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                        {post.description}
+                      </p>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {post.tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-medium uppercase tracking-wider bg-primary/10 text-primary border border-primary/20"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {post.tags.length > 3 && (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                            +{post.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Read more indicator */}
+                      <div className="flex items-center gap-2 text-sm font-semibold text-primary pt-2">
+                        <span>Read article</span>
+                        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                      </div>
+                    </div>
+                  </Link>
                 </motion.article>
               );
             })}
