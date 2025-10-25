@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback, useReducer } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 import { MusicTrack } from "@/content/music/tracks";
 import { cn } from "@/utils/cn";
 
@@ -19,6 +20,61 @@ interface MusicGalleryProps {
   /** Hide internal filters/search bar when external search UI is used. */
   showFilters?: boolean;
 }
+
+// Player state types
+interface PlayerState {
+  currentTrackSlug: string | null;
+  isPlaying: boolean;
+  isLoading: boolean;
+  currentTime: number;
+  duration: number;
+  volume: number;
+}
+
+type PlayerAction =
+  | { type: "SET_TRACK"; slug: string | null }
+  | { type: "PLAY" }
+  | { type: "PAUSE" }
+  | { type: "TOGGLE_PLAY" }
+  | { type: "SET_TIME"; time: number }
+  | { type: "SET_DURATION"; duration: number }
+  | { type: "SET_VOLUME"; volume: number }
+  | { type: "SET_LOADING"; isLoading: boolean }
+  | { type: "RESET_PLAYBACK" };
+
+function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
+  switch (action.type) {
+    case "SET_TRACK":
+      return {
+        ...state,
+        currentTrackSlug: action.slug,
+        isPlaying: true,
+      };
+    case "PLAY":
+      return { ...state, isPlaying: true };
+    case "PAUSE":
+      return { ...state, isPlaying: false };
+    case "TOGGLE_PLAY":
+      return { ...state, isPlaying: !state.isPlaying };
+    case "SET_TIME":
+      return { ...state, currentTime: action.time };
+    case "SET_DURATION":
+      return { ...state, duration: action.duration };
+    case "SET_VOLUME":
+      return { ...state, volume: action.volume };
+    case "SET_LOADING":
+      return { ...state, isLoading: action.isLoading };
+    case "RESET_PLAYBACK":
+      return {
+        ...state,
+        currentTime: 0,
+        duration: 0,
+      };
+    default:
+      return state;
+  }
+}
+
 // (Removed old standalone catalog filter pill styling after unifying into dropdown)
 
 function formatReleaseDate(date?: string) {
@@ -48,14 +104,21 @@ function formatTime(value?: number, fallback = "0:00") {
 export function MusicGallery({ tracks, reverse = false, query, showFilters = true }: MusicGalleryProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  // Unified search dropdown (categories inside search input similar to blog UX)
   const [showCategoryMenu, setShowCategoryMenu] = useState<boolean>(false);
-  const [currentTrackSlug, setCurrentTrackSlug] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0.9);
+
+  const [playerState, dispatch] = useReducer(playerReducer, {
+    currentTrackSlug: null,
+    isPlaying: false,
+    isLoading: false,
+    currentTime: 0,
+    duration: 0,
+    volume: 0.9,
+  });
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const wasPlayingRef = useRef<boolean>(false);
+
+  const { currentTrackSlug, isPlaying, isLoading, currentTime, duration, volume } = playerState;
 
   const sortedTracks = useMemo(() => {
     return [...tracks].sort((a, b) => {
@@ -84,19 +147,19 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
 
   useEffect(() => {
     if (filteredTracks.length === 0) {
-      setCurrentTrackSlug(null);
-      setIsPlaying(false);
+      dispatch({ type: "SET_TRACK", slug: null });
+      dispatch({ type: "PAUSE" });
       return;
     }
 
     if (!currentTrackSlug) {
-      setCurrentTrackSlug(filteredTracks[0].slug);
+      dispatch({ type: "SET_TRACK", slug: filteredTracks[0].slug });
       return;
     }
 
     const stillExists = filteredTracks.some((track) => track.slug === currentTrackSlug);
     if (!stillExists) {
-      setCurrentTrackSlug(filteredTracks[0].slug);
+      dispatch({ type: "SET_TRACK", slug: filteredTracks[0].slug });
     }
   }, [filteredTracks, currentTrackSlug]);
 
@@ -122,7 +185,7 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
     if (isPlaying && currentTrack?.audioSrc) {
       const playPromise = audio.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => setIsPlaying(false));
+        playPromise.catch(() => dispatch({ type: "PAUSE" }));
       }
     } else {
       audio.pause();
@@ -130,37 +193,99 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
   }, [isPlaying, currentTrack?.audioSrc]);
 
   useEffect(() => {
+    wasPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
+  useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-
+    const wasPlaying = wasPlayingRef.current;
+    
     audio.pause();
     audio.currentTime = 0;
-    setCurrentTime(0);
-    setDuration(0);
+    dispatch({ type: "RESET_PLAYBACK" });
 
     if (!currentTrack?.audioSrc) return;
 
-    audio.load();
+    // Set loading state
+    dispatch({ type: "SET_LOADING", isLoading: true });
+
+    const fetchAudioUrl = async () => {
+      try {
+        const functionAppUrl = process.env.NEXT_PUBLIC_FUNCTION_APP_URL;
+        if (!functionAppUrl) {
+          console.error('NEXT_PUBLIC_FUNCTION_APP_URL is not configured');
+          dispatch({ type: "SET_LOADING", isLoading: false });
+          toast.error("Audio configuration error. Please try again later.");
+          return;
+        }
+        const response = await fetch(`${functionAppUrl}/music?file=${encodeURIComponent(currentTrack.audioSrc)}`);
+        
+        if (!response.ok) {
+          console.error('Failed to fetch audio URL:', response.statusText);
+          dispatch({ type: "SET_LOADING", isLoading: false });
+          toast.error(`Failed to load track: ${response.statusText}`);
+          return;
+        }
+
+        const data = await response.json();
+        if (audio) {
+          audio.src = data.url;
+          audio.load();
+          
+          // Clear loading state when audio is ready
+          const handleLoadedData = () => {
+            dispatch({ type: "SET_LOADING", isLoading: false });
+          };
+          audio.addEventListener('loadeddata', handleLoadedData, { once: true });
+          
+          // Handle audio loading errors
+          const handleError = () => {
+            dispatch({ type: "SET_LOADING", isLoading: false });
+            toast.error("Failed to load audio. Please try again.");
+          };
+          audio.addEventListener('error', handleError, { once: true });
+          
+          if (wasPlaying) {
+            const handleCanPlay = () => {
+              const playPromise = audio.play();
+              if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                  dispatch({ type: "PAUSE" });
+                  toast.error("Failed to play audio. Please try again.");
+                });
+              }
+            };
+            audio.addEventListener('canplay', handleCanPlay, { once: true });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching audio URL:', error);
+        dispatch({ type: "SET_LOADING", isLoading: false });
+        toast.error(error instanceof Error ? error.message : "Failed to load track. Please try again.");
+      }
+    };
+
+    fetchAudioUrl();
   }, [currentTrack?.audioSrc]);
 
   const handlePlayPause = useCallback(() => {
-    setIsPlaying((prev) => !prev);
+    dispatch({ type: "TOGGLE_PLAY" });
   }, []);
 
   const handleSelectTrack = useCallback((slug: string) => {
-    setCurrentTrackSlug(slug);
-    setIsPlaying(true);
+    dispatch({ type: "SET_TRACK", slug });
   }, []);
 
   const handleSeek = useCallback((value: number) => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.currentTime = value;
-    setCurrentTime(value);
+    dispatch({ type: "SET_TIME", time: value });
   }, []);
 
   const handleVolumeChange = useCallback((value: number) => {
-    setVolume(value);
+    dispatch({ type: "SET_VOLUME", volume: value });
     const audio = audioRef.current;
     if (audio) {
       audio.volume = value;
@@ -178,19 +303,16 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
         if (autoplay) {
           const playPromise = audio.play();
           if (playPromise !== undefined) {
-            playPromise.catch(() => setIsPlaying(false));
+            playPromise.catch(() => dispatch({ type: "PAUSE" }));
           }
-          setIsPlaying(true);
+          dispatch({ type: "PLAY" });
         }
         return;
       }
 
       const index = currentTrackIndex >= 0 ? currentTrackIndex : 0;
       const nextIndex = (index + 1) % filteredTracks.length;
-      setCurrentTrackSlug(filteredTracks[nextIndex].slug);
-      if (autoplay) {
-        setIsPlaying(true);
-      }
+      dispatch({ type: "SET_TRACK", slug: filteredTracks[nextIndex].slug });
     },
     [filteredTracks, currentTrackIndex, isPlaying]
   );
@@ -205,19 +327,16 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
       if (isPlaying) {
         const playPromise = audio.play();
         if (playPromise !== undefined) {
-          playPromise.catch(() => setIsPlaying(false));
+          playPromise.catch(() => dispatch({ type: "PAUSE" }));
         }
-        setIsPlaying(true);
+        dispatch({ type: "PLAY" });
       }
       return;
     }
 
     const index = currentTrackIndex >= 0 ? currentTrackIndex : 0;
     const previousIndex = index === 0 ? filteredTracks.length - 1 : index - 1;
-    setCurrentTrackSlug(filteredTracks[previousIndex].slug);
-    if (isPlaying) {
-      setIsPlaying(true);
-    }
+    dispatch({ type: "SET_TRACK", slug: filteredTracks[previousIndex].slug });
   }, [filteredTracks, currentTrackIndex, isPlaying]);
 
   const progressValue = duration > 0 ? currentTime : 0;
@@ -235,30 +354,29 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
   );
 
   const queueClass = cn(
-    "bg-background/85 backdrop-blur overflow-y-auto",
-    reverse && "lg:order-1"
+    "bg-background/85 backdrop-blur overflow-y-auto border-l border-border/30",
+    reverse ? "lg:order-1" : "shadow-[4px_0_24px_-4px_rgba(0,0,0,0.3)]"
   );
 
   return (
     <div className="space-y-6 lg:space-y-8">
       <audio
         ref={audioRef}
-        src={currentTrack?.audioSrc ?? ""}
         preload="metadata"
         onTimeUpdate={() => {
           const audio = audioRef.current;
           if (!audio) return;
-          setCurrentTime(audio.currentTime);
-          setDuration(audio.duration || 0);
+          dispatch({ type: "SET_TIME", time: audio.currentTime });
+          dispatch({ type: "SET_DURATION", duration: audio.duration || 0 });
         }}
         onLoadedMetadata={() => {
           const audio = audioRef.current;
           if (!audio) return;
-          setDuration(audio.duration || 0);
+          dispatch({ type: "SET_DURATION", duration: audio.duration || 0 });
         }}
         onEnded={() => handleNext(true)}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
+        onPlay={() => dispatch({ type: "PLAY" })}
+        onPause={() => dispatch({ type: "PAUSE" })}
         className="hidden"
       >
         Your browser does not support the audio element.
@@ -348,7 +466,14 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
                   layout
                   className={playerCardClass}
                 >
-                  <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50", currentTrack?.accent ?? "from-primary/10 to-secondary/10")} />
+                  <motion.div 
+                    key={currentTrack?.slug}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.5 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className={cn("absolute inset-0 bg-gradient-to-br", currentTrack?.accent ?? "from-primary/10 to-secondary/10")} 
+                  />
                   <div className="relative flex h-full flex-col gap-5 p-6 md:p-7 min-h-[400px] lg:min-h-[500px]">
                     <div className="flex flex-wrap items-start justify-between gap-4 text-xs uppercase tracking-[0.3em] text-muted-foreground">
                       <span>{currentTrack?.category ?? "Playlist"}</span>
@@ -430,19 +555,25 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
                             type="button"
                             onClick={() => handleSelectTrack(track.slug)}
                             className={cn(
-                              "group flex w-full items-center justify-between gap-6 rounded-2xl border border-transparent bg-background/60 px-4 py-3 text-left transition",
+                              "group flex w-full items-center justify-between gap-6 rounded-2xl border px-4 py-3 text-left transition-all duration-200",
                               isActive
-                                ? "border-primary/60 bg-primary/10 text-foreground shadow-sm shadow-primary/15"
-                                : "hover:border-primary/40 hover:bg-primary/5"
+                                ? "border-primary bg-primary/15 text-foreground shadow-md shadow-primary/25 ring-2 ring-primary/30"
+                                : "border-transparent bg-background/60 hover:border-primary/40 hover:bg-primary/5"
                             )}
                             aria-current={isActive}
                           >
                             <div className="flex items-center gap-4">
-                              <span className="font-mono text-xs text-muted-foreground/70">
+                              <span className={cn(
+                                "font-mono text-xs transition-colors",
+                                isActive ? "text-primary font-semibold" : "text-muted-foreground/70"
+                              )}>
                                 {String(index + 1).padStart(2, "0")}
                               </span>
                               <div className="space-y-1">
-                                <p className="text-sm font-semibold leading-tight">
+                                <p className={cn(
+                                  "text-sm font-semibold leading-tight transition-colors",
+                                  isActive && "text-primary"
+                                )}>
                                   {track.title}
                                 </p>
                                 <p className="text-xs text-muted-foreground/80 uppercase tracking-[0.25em]">
@@ -454,7 +585,7 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
                             <div className="flex items-center gap-3 text-xs text-muted-foreground/80">
                               {track.duration && <span>{track.duration}</span>}
                               {isActive && (
-                                <span className="flex items-center gap-2 text-primary">
+                                <span className="flex items-center gap-2 text-primary font-medium">
                                   <span className="relative flex h-1.5 w-1.5">
                                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/70 opacity-75" />
                                     <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
@@ -472,7 +603,7 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
               </section>
 
               {/* Bottom Section: Unified Player Controls */}
-              <div className="border-t border-border bg-background/95 backdrop-blur p-5 md:p-6">
+              <div className="border-t border-border bg-background/95 backdrop-blur p-5 md:p-6 shadow-[0_-8px_24px_-4px_rgba(0,0,0,0.25)]">
                 <div className="max-w-4xl mx-auto space-y-4">
                   {/* Progress Bar */}
                   <div className="space-y-2">
@@ -522,10 +653,20 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
                       <button
                         type="button"
                         onClick={handlePlayPause}
-                        className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg shadow-foreground/20 transition hover:-translate-y-0.5 hover:scale-105"
+                        disabled={isLoading}
+                        className={cn(
+                          "flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg shadow-foreground/20 transition hover:-translate-y-0.5 hover:scale-105",
+                          isLoading && "opacity-50 cursor-not-allowed hover:translate-y-0 hover:scale-100"
+                        )}
                         aria-label={isPlaying ? "Pause track" : "Play track"}
                       >
-                        {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                        {isLoading ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : isPlaying ? (
+                          <Pause className="h-5 w-5" />
+                        ) : (
+                          <Play className="h-5 w-5" />
+                        )}
                       </button>
                       <button
                         type="button"
@@ -538,8 +679,17 @@ export function MusicGallery({ tracks, reverse = false, query, showFilters = tru
                     </div>
 
                     {/* Status */}
-                    <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground/70 text-center sm:text-right">
-                      {isPlaying ? "Now playing" : "Ready to play"}
+                    <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground/70 text-center sm:text-right flex items-center justify-center sm:justify-end gap-2">
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <span>Loading track...</span>
+                        </>
+                      ) : isPlaying ? (
+                        "Now playing"
+                      ) : (
+                        "Ready to play"
+                      )}
                     </div>
                   </div>
                 </div>

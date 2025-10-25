@@ -72,6 +72,46 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
+// Blob service for the storage account
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+  parent: storageAccount
+  name: 'default'
+  properties: {
+    cors: {
+      corsRules: [
+        {
+          allowedOrigins: [
+            'https://${staticWebApp.properties.defaultHostname}'
+            'https://${domainName}'
+            'https://${wwwSubdomain}.${domainName}'
+          ]
+          allowedMethods: [
+            'GET'
+            'HEAD'
+            'OPTIONS'
+          ]
+          allowedHeaders: [
+            '*'
+          ]
+          exposedHeaders: [
+            '*'
+          ]
+          maxAgeInSeconds: 3600
+        }
+      ]
+    }
+  }
+}
+
+// Blob container for music files
+resource musicContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
+  parent: blobService
+  name: 'music'
+  properties: {
+    publicAccess: 'None'
+  }
+}
+
 // Function app hosting plan
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'plan-${resourceToken}'
@@ -145,6 +185,14 @@ resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'NEXT_PUBLIC_GA_MEASUREMENT_ID'
           value: publicGaMeasurementId
+        }
+        {
+          name: 'AZURE_STORAGE_CONNECTION_STRING'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
+        }
+        {
+          name: 'MUSIC_CONTAINER_NAME'
+          value: 'music'
         }
       ]
     }

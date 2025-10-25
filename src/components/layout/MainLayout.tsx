@@ -47,7 +47,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
           <nav className="hidden md:flex items-center gap-7">
             {navItems.map((item) => {
-              const activeCls = isActive(item.href) ? "text-foreground" : "";
+              const active = isActive(item.href);
               return (
                 <Link
                   key={item.name}

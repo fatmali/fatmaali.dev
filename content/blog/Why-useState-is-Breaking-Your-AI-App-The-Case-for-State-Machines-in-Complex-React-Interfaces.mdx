@@ -59,10 +59,6 @@ This is the moment of truth for many engineers: the realization that **managing 
 
 ### State Machines 101: What They Are and Why They Matter
 
-Before we jump into React-specific solutions, let's establish what a state machine actually is—and why it's relevant to frontend development.
-
-#### The Core Concept
-
 A **finite state machine (FSM)** is a computational model that can be in exactly one of a finite number of states at any given time. Think of it like a flowchart with strict rules:
 
 1. **States**: A defined set of conditions your system can be in (e.g., `idle`, `loading`, `success`, `error`)
@@ -120,31 +116,87 @@ Now that we understand what state machines are, let's see how to actually implem
 
 ### The Real-World Scenario: AI Streaming Complexity
 
-Before we dive into solutions, let's be clear about what we're building. What seems like a simple "type a prompt, get a response" feature actually has **8 distinct states** and complex orchestration:
+Before we dive into solutions, let's be clear about what we're building. What seems like a simple "type a prompt, get a response" feature actually has **real-world challenges** that break simple state management:
 
 ```text
-idle → authenticating → connecting → reasoning → streaming → complete
-                    ↓
-                  error → (retry logic)
+idle → connecting → streaming → complete
+          ↓           ↓
+        error ← ─ ─ ─ ┘
+          ↓
+      (retry logic)
 ```
 
-Your `useReducer` machine, which happily handled `loading` and `success`, suddenly feels inadequate. You're not just fetching data anymore. You're orchestrating:
+Your `useReducer` machine, which happily handled `loading` and `success`, suddenly feels inadequate. Here are the **actual production scenarios** you need to handle:
 
-- **Authentication**: Verify API credentials (with potential auth failures)
-- **Connection**: Establish WebSocket (with 20% random network failures)  
-- **Reasoning**: AI analyzes prompt structure before responding
-- **Streaming**: Receive 150+ tokens character-by-character over 7 seconds
-- **Error Recovery**: Automatic retries with exponential backoff (max 3 attempts)
-- **Cancellation**: User can abort mid-stream at any point
-- **Regeneration**: Start over with same prompt after completion
+#### The Real Challenges (Not Mocked Timers)
 
-What happens if the user clicks "Cancel" *during* the authentication phase? What if a network error occurs while you're already streaming? What if they try to regenerate while an error retry is in progress? Your state isn't just `loading` or `success` anymore. It's a complex orchestration of:
+**1. Race Conditions**
+- User submits a prompt → starts streaming
+- User gets impatient, submits *another* prompt mid-stream
+- First stream is still sending chunks while second request is connecting
+- **What should happen?** Cancel the first? Queue the second? Your `useState` booleans have no answer.
 
-- **Sequential automatic transitions** (auth → connect → reasoning → stream)
-- **Conditional transitions** (can only start if prompt exists)
-- **Parallel context updates** (token counts, retry attempts, streamed text)
-- **Error boundaries** (network failures, auth failures, stream errors)
-- **User interruptions** (cancel, regenerate, reset)
+**2. Network Failures Mid-Stream**
+- You're 60% through receiving a streaming response
+- Network drops, WebSocket disconnects
+- Do you retry from the beginning? Resume? Show partial data?
+- With scattered `useState` hooks, you're juggling `isStreaming`, `hasError`, `partialData`, and `connectionStatus` simultaneously.
+
+**3. User Interruptions**
+- User clicks "Cancel" while streaming
+- You need to: abort the fetch, clean up the WebSocket, clear pending chunks, reset UI
+- But wait—what if they click "Regenerate" *while* the cancellation is processing?
+- **This creates impossible states:** `isCancelling` + `isStarting` + `isStreaming` all true at once.
+
+**4. Retry Logic with Conditions**
+- Authentication fails → retry makes sense
+- Stream connection fails → retry makes sense  
+- Stream completes but user dislikes result → regenerate makes sense
+- How do you model "retry is valid from error states but not from streaming or complete"?
+- With `useState`, you're writing nested `if` statements checking multiple booleans.
+
+**5. Parallel Context Updates**
+- While streaming, you're updating: accumulated text, token count, time elapsed
+- If an error occurs, you need to preserve the partial response for display
+- If user cancels, you need to freeze the context mid-update
+- **useState scatter:** `setText()`, `setTokens()`, `setElapsed()` can desync.
+
+**Why This Breaks `useState`**
+
+Let's see what this looks like with traditional state:
+
+```jsx
+const [isConnecting, setIsConnecting] = useState(false);
+const [isStreaming, setIsStreaming] = useState(false);
+const [error, setError] = useState(null);
+const [isCancelling, setIsCancelling] = useState(false);
+const [isRetrying, setIsRetrying] = useState(false);
+
+// User clicks submit while already streaming - RACE CONDITION
+const handleSubmit = async () => {
+  if (isStreaming) {
+    // Cancel existing stream first? Or ignore?
+    setIsCancelling(true);
+    // Wait... how long? Another useEffect?
+  }
+  setIsConnecting(true);
+  // But what if cancellation hasn't finished?
+};
+
+// Network fails mid-stream - IMPOSSIBLE STATE
+const handleStreamError = (err) => {
+  setError(err);
+  setIsStreaming(false); // Are we still connected? 
+  setIsRetrying(true); // Or should we wait for user input?
+};
+```
+
+**The problem:** You're modeling a **state graph** with independent booleans. The real system has **explicit paths**:
+- From `streaming`, you can go to `complete`, `error`, or `cancelled`
+- From `error`, you can only go to `idle` (via reset) or back to `connecting` (via retry)
+- From `idle`, you can only go to `connecting` (if prompt is valid)
+
+State machines enforce these rules. `useState` doesn't.
 
 Now we see the true scope of the problem. This isn't just "loading" or "success"—it's a complex orchestration that needs proper tooling.
 
@@ -199,17 +251,17 @@ But what about our complex AI streaming scenario?
 
 Our AI streaming component has requirements that `useReducer` struggles with:
 
-- **Automatic transitions**: Auth → Connect → Reasoning → Stream (time-based, no user action)
-- **Guards**: Can't start if prompt is empty
-- **Entry/exit actions**: Clear streamed text when entering streaming state
-- **Complex conditional logic**: 20% chance of network failure, retry count limits
+- **Race condition prevention**: Can't start new stream while another is active (need to cancel first)
+- **Guards**: Can't retry if max attempts reached; can't start if prompt is empty
+- **Entry/exit actions**: Clear streamed text when starting, preserve it on error for display
+- **Complex conditional logic**: Different error recovery paths (network vs auth vs stream)
 
 You *could* model this with `useReducer` + `useEffect`, but now you're manually managing:
 
-- Timers in `useEffect` that dispatch actions
-- Cleanup when components unmount
-- Synchronization between reducer state and effect dependencies
-- Your reducer becomes a tangled mess of nested `switch` statements
+- Abort controllers and cleanup in `useEffect` for race conditions
+- Manual state checking before every transition (`if (state.status !== 'streaming') return;`)
+- Synchronization between reducer state and async operations
+- Your reducer becomes a tangled mess of nested `switch` statements with validation
 
 You're back to the same complexity problem, just in a different form.
 
@@ -219,15 +271,15 @@ This is the point where you're not just managing state; you're orchestrating a c
 
 Enter **XState**. XState isn't just a state management library; it's a framework for building **statecharts**. A statechart extends finite state machines with hierarchical (nested) states, parallel states, guarded transitions, and entry/exit actions—critical features for modeling complex async flows like AI streaming.
 
-Key capabilities relevant to our AI demo:
+Key capabilities relevant to our real-world AI challenges:
 
-- **Guards (Conditional Transitions):** Prevent invalid paths (e.g. block `START` with empty prompt).
-- **Automatic Transitions:** Time-based progress (`authenticating → connecting → reasoning → streaming`).
-- **Entry/Exit Actions:** Reset or initialize context cleanly when states change.
-- **Unified Context:** One source of truth for tokens, retries, errors.
-- **Deterministic Error Paths:** All network failures converge in `error` with structured recovery.
+- **Guards (Conditional Transitions):** Prevent race conditions (block `START` while streaming, block `RETRY` if max attempts reached).
+- **Deterministic Transitions:** Given current state + event, next state is always predictable (no `isLoading && isRetrying` ambiguity).
+- **Entry/Exit Actions:** Reset or preserve context cleanly when states change (clear text on start, preserve on error).
+- **Unified Context:** One source of truth for tokens, retries, errors, partial responses—atomic updates, no desync.
+- **Explicit Error Paths:** Network failures, stream errors, and cancellations have defined recovery paths.
 
-Here's the simplified machine again (conceptual version) to reinforce structure:
+Here's a sample state machine for AI streaming:
 
 ```typescript
 import { createMachine, assign } from 'xstate';
@@ -235,58 +287,163 @@ import { createMachine, assign } from 'xstate';
 const aiStreamingMachine = createMachine({
   id: 'aiStreaming',
   initial: 'idle',
-  context: { prompt: '', streamedText: '', tokens: 0, retryCount: 0, error: null },
+  context: { 
+    prompt: '', 
+    streamedText: '', 
+    tokens: 0, 
+    retryCount: 0, 
+    error: null,
+    abortController: null 
+  },
   states: {
     idle: {
       on: {
-        START: { target: 'authenticating', guard: ({ context }) => context.prompt.length > 0 },
-        UPDATE_PROMPT: { actions: assign({ prompt: ({ event }) => event.value }) }
+        START: { 
+          target: 'connecting',
+          guard: ({ context }) => context.prompt.trim().length > 0,
+          actions: assign({ 
+            abortController: () => new AbortController(),
+            error: null 
+          })
+        },
+        UPDATE_PROMPT: { 
+          actions: assign({ prompt: ({ event }) => event.value }) 
+        }
       }
     },
-    authenticating: { after: { 800: 'connecting' } },
     connecting: {
-      after: {
-        1000: [
-          { target: 'error', guard: () => Math.random() < 0.2, actions: assign({ error: 'Network connection failed' }) },
-          { target: 'reasoning' }
-        ]
-      }
-    },
-    reasoning: { after: { 1500: 'streaming' } },
-    streaming: {
-      entry: assign({ streamedText: '' }),
+      invoke: {
+        src: 'connectToStream',
+        onDone: { target: 'streaming' },
+        onError: { 
+          target: 'error',
+          actions: assign({ 
+            error: ({ event }) => event.error.message 
+          })
+        }
+      },
       on: {
-        CHUNK_RECEIVED: assign({
-          streamedText: ({ context, event }) => context.streamedText + event.chunk,
-          tokens: ({ context }) => context.tokens + 1
-        }),
-        STREAM_COMPLETE: 'complete',
-        CANCEL: 'cancelled'
+        CANCEL: { 
+          target: 'cancelled',
+          actions: 'abortConnection' // cleanup action
+        }
       }
     },
-    complete: { on: { REGENERATE: 'authenticating', RESET: 'idle' } },
+    streaming: {
+      entry: assign({ streamedText: '', tokens: 0 }), // clear on entry
+      on: {
+        CHUNK_RECEIVED: {
+          // PARALLEL CONTEXT UPDATES: atomic updates, no desync
+          actions: assign({
+            streamedText: ({ context, event }) => context.streamedText + event.chunk,
+            tokens: ({ context }) => context.tokens + 1
+          })
+        },
+        STREAM_COMPLETE: { target: 'complete' },
+        STREAM_ERROR: {
+          target: 'error',
+          // PRESERVE PARTIAL DATA: keep what we received
+          actions: assign({ 
+            error: ({ event }) => event.message 
+            // Note: streamedText NOT cleared, preserved for user
+          })
+        },
+        CANCEL: { 
+          target: 'cancelled',
+          actions: 'abortStream' 
+        }
+      }
+    },
+    complete: { 
+      on: { 
+        REGENERATE: { 
+          target: 'connecting',
+          actions: assign({ retryCount: 0 }) // reset retry count
+        },
+        RESET: { 
+          target: 'idle',
+          actions: assign({ 
+            prompt: '', 
+            streamedText: '', 
+            tokens: 0,
+            retryCount: 0 
+          })
+        }
+      } 
+    },
     error: {
       on: {
         RETRY: {
-          target: 'authenticating',
+          target: 'connecting',
+          // RETRY LOGIC: guard prevents infinite retries
           guard: ({ context }) => context.retryCount < 3,
-          actions: assign({ retryCount: ({ context }) => context.retryCount + 1 })
+          actions: assign({ 
+            retryCount: ({ context }) => context.retryCount + 1,
+            error: null 
+          })
         },
-        RESET: 'idle'
+        RESET: { 
+          target: 'idle',
+          actions: assign({ 
+            streamedText: '', 
+            retryCount: 0,
+            error: null 
+          })
+        }
       }
     },
-    cancelled: { on: { RETRY: 'authenticating', RESET: 'idle' } }
+    cancelled: { 
+      // Preserves streamedText so user sees what was received before cancel
+      on: { 
+        RETRY: { target: 'connecting' },
+        RESET: { target: 'idle' }
+      } 
+    }
+  }
+}, {
+  // Define implementation for side effects
+  actors: {
+    connectToStream: async ({ context, self }) => {
+      const response = await fetch('/api/stream', {
+        method: 'POST',
+        body: JSON.stringify({ prompt: context.prompt }),
+        signal: context.abortController.signal // enables cancellation
+      });
+      
+      if (!response.ok) throw new Error('Connection failed');
+      
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          self.send({ type: 'STREAM_COMPLETE' });
+          break;
+        }
+        
+        const chunk = decoder.decode(value);
+        self.send({ type: 'CHUNK_RECEIVED', chunk });
+      }
+    }
+  },
+  actions: {
+    abortConnection: ({ context }) => context.abortController?.abort(),
+    abortStream: ({ context }) => context.abortController?.abort()
   }
 });
 ```
 
-Why this matters:
+Why this matters for **real-world scenarios**:
 
-1. Impossible states (authenticating + streaming) simply cannot occur.
-2. Time-based orchestration is declarative, not chained `useEffect` dependencies.
-3. Context updates are atomic—no drift between `tokens` and `streamedText`.
-4. Recovery logic is centralized in one `error` branch.
-5. The machine itself is living documentation.
+1. **Race conditions eliminated**: Can't start new stream while in `streaming` state—transition simply doesn't exist.
+2. **Network failures handled**: `invoke.onError` provides centralized error handling with context preservation.
+3. **Cancellation is first-class**: `CANCEL` event from any async state has explicit paths, cleanup actions guaranteed.
+4. **Retry logic enforced**: Guard at `error.RETRY` checks `retryCount < 3`, impossible to bypass.
+5. **Context updates atomic**: `CHUNK_RECEIVED` updates `streamedText` and `tokens` together, no desync.
+6. **Partial data preserved**: Error and cancellation states don't clear `streamedText`, user sees progress.
+
+Compare this to managing the same logic with scattered `useState` hooks and conditional `useEffect` cleanup. The machine is living documentation of your app's behavior.
 
 ## Common Questions
 
@@ -327,7 +484,12 @@ For our AI streaming component, the complexity is in **state transitions and orc
 
 ## Try the Interactive Demo
 
-Now that you've seen the concepts, explore the full interactive AI streaming state machine. Watch states progress, open the reasoning panel, and trigger errors & cancellations.
+Now that you've seen the concepts, explore the interactive AI streaming state machine. The demo **simulates real-world challenges** you'd face in production:
+
+- **Random network failures** during connection (simulates flaky APIs)
+- **User race conditions** (try clicking START twice rapidly)
+- **Mid-stream cancellation** (cancel while tokens are flowing)
+- **Retry logic with limits** (automatic failure after 3 retries)
 
 ### Playground
 
@@ -337,14 +499,18 @@ Now that you've seen the concepts, explore the full interactive AI streaming sta
 
 Try these experiments to see state machine benefits in action:
 
-| Experiment | What to Try | What You'll Notice |
+| Experiment | What to Try | Real-World Parallel |
 |------------|-------------|-------------------|
-| **Guard Protection** | Click "Start Stream" with empty prompt | Guard blocks transition—impossible state prevented |
-| **Reasoning Panel** | Expand 🧠 panel during state changes | Historical state reasoning creates live audit trail |
-| **Automatic Flow** | Start with valid prompt and observe | Timed chain (auth → connect → reasoning → stream) executes automatically |
-| **Random Failure** | Retry multiple times | 20% connection failure appears; centralized error handling kicks in |
-| **Cancellation** | Click CANCEL mid-stream | Clean abort with RETRY/RESET options; no orphaned state |
-| **Regenerate** | Complete stream, then REGENERATE | Reuses prompt without impossible states appearing |
+| **Guard Protection** | Click "Start Stream" with empty prompt | Prevents wasted API calls in production—validation enforced at state level |
+| **Reasoning Panel** | Expand 🧠 panel during state changes | Debugging production issues: historical state trail shows exactly what happened |
+| **Race Condition Prevention** | Click START rapidly multiple times | Guards prevent concurrent streams—common issue when users double-click submit |
+| **Random Network Failure** | Retry multiple times until connection fails | Simulates real flaky network conditions; centralized error handling kicks in |
+| **Mid-Stream Cancellation** | Click CANCEL while tokens are streaming | User abandons response mid-generation—cleanup happens automatically, no orphaned listeners |
+| **Partial Data Preservation** | Cancel or error mid-stream, check output | Production UX: show users what was received before failure (they can still copy it) |
+| **Retry Limit Enforcement** | Fail connection 3+ times | Guard prevents infinite retry loops that drain API quota |
+| **Regenerate After Complete** | Complete stream, then REGENERATE | Common UX pattern: try again with same prompt without re-typing |
+
+**Note on the demo:** While the demo uses timers for the connection/streaming simulation (to make the visualization clear), the **state machine patterns** shown here apply to **real async operations** like `fetch()`, WebSocket connections, and streaming APIs. The complexity it solves—race conditions, cancellation, retry logic, context preservation—are all real-world production concerns.
 
 ## Performance Considerations
 

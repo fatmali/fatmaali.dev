@@ -2,19 +2,20 @@
   "name": "fatmaali-dev-functions",
   "version": "1.0.0",
   "description": "Azure Functions for fatmaali.dev website",
-  "main": "./functions/*.js",
+  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "watch": "tsc -w",
-    "prestart": "npm run build",
+    "prestart": "npm run build && npm install --production=false",
     "start": "func start",
     "test": "echo \"No tests yet...\"",
-    "deploy": "npm run build && func azure functionapp publish func-fatmaali-dev -- --no-build"
+    "deploy": "npm run build && func azure functionapp publish func-i75tzybi6yxls"
   },
   "dependencies": {
     "@azure/functions": "^4.0.0",
+    "@azure/storage-blob": "^12.24.0",
     "nodemailer": "^6.9.9"
   },
   "devDependencies": {

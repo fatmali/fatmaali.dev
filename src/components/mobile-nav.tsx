@@ -176,7 +176,11 @@ export function MobileNav({ items }: MobileNavProps) {
                 <nav className="flex flex-col gap-6 items-center w-full">
                   {items.map((item, i) => {
                     const active = isActive(item.href);
-                    const baseClasses = `text-2xl font-medium transition-colors relative group nerdy-font z-10 ${active ? "text-primary" : "hover:text-primary"}`;
+                    const baseClasses = `text-2xl font-medium transition-all relative group nerdy-font z-10 ${
+                      active 
+                        ? "text-foreground font-bold px-6 py-2 rounded-full bg-primary/15 border-2 border-primary/30" 
+                        : "text-muted-foreground hover:text-primary"
+                    }`;
                     // Keep hash links as anchors for smooth scrolling; use Link for normal routes
                     if (item.href.includes('#')) {
                       return (
@@ -202,14 +206,6 @@ export function MobileNav({ items }: MobileNavProps) {
                           className={baseClasses}
                         >
                           {item.name}
-                          <motion.span 
-                            className={`absolute -bottom-2 left-0 ${
-                              active 
-                                ? "w-full h-1 bg-primary" 
-                                : "w-0 h-1 bg-gradient-to-r from-primary to-accent group-hover:w-full"
-                            }`}
-                            transition={{ duration: 0.3 }}
-                          />
                         </motion.a>
                       );
                     }
@@ -221,14 +217,6 @@ export function MobileNav({ items }: MobileNavProps) {
                           className={baseClasses}
                         >
                           {item.name}
-                          <motion.span 
-                            className={`absolute -bottom-2 left-0 ${
-                              active 
-                                ? "w-full h-1 bg-primary" 
-                                : "w-0 h-1 bg-gradient-to-r from-primary to-accent group-hover:w-full"
-                            }`}
-                            transition={{ duration: 0.3 }}
-                          />
                         </Link>
                       </motion.div>
                     );

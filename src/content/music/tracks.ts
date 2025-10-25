@@ -49,6 +49,15 @@ export interface MusicTrack {
   tags?: string[];
 }
 
+// Helper function to get the API URL for music files
+export function getMusicApiUrl(filename: string): string {
+  const functionAppUrl = process.env.NEXT_PUBLIC_FUNCTION_APP_URL;
+  if (!functionAppUrl) {
+    throw new Error('NEXT_PUBLIC_FUNCTION_APP_URL is not configured');
+  }
+  return `${functionAppUrl}/music?file=${encodeURIComponent(filename)}`;
+}
+
 export const musicTracks: MusicTrack[] = [
   {
     slug: "chatbot-cowgirl-country",
@@ -56,7 +65,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Sun-baked twang with playful lyrics about a chatbot lassoing runaway bugs—perfect for lighthearted demo days.",
     category: "Country",
-    audioSrc: "/music/Chatbot Cowgirl (Country).mp4",
+    audioSrc: "Chatbot Cowgirl (Country).mp4",
     releaseDate: "2025-07-18",
     moods: ["playful", "storytelling"],
     tags: ["Romantic", "Comical"],
@@ -68,7 +77,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Upbeat rhumba celebrating a dev's undying love for their laptop—layered guitars, polyrhythms, and vibrant call-and-response hooks.",
     category: "Rhumba",
-    audioSrc: "/music/Laptop Yangu Ndio Bibi Extended (Rhumba).mp4",
+    audioSrc: "Laptop Yangu Ndio Bibi Extended (Rhumba).mp4",
     releaseDate: "2025-08-02",
     moods: ["playful", "storytelling", "soulful"],
     tags: ["Dev Love", "Rhumba"],
@@ -80,7 +89,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "High-energy Bongo Flava celebrating the art of writing code—catchy hooks and driving percussion for late-night coding sessions.",
     category: "Bongo",
-    audioSrc: "/music/Andika Kodi Extended Remix (Bongo).mp4",
+    audioSrc: "Andika Kodi Extended Remix (Bongo).mp4",
     releaseDate: "2025-07-25",
     moods: ["energetic", "upbeat", "playful"],
     tags: ["Coding", "Bongo Flava"],
@@ -92,7 +101,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Smooth Afrobeat rhythms exploring the beauty and chaos of git branches—perfect for when you're merging worlds together.",
     category: "Afrobeat",
-    audioSrc: "/music/Branches (Afrobeat).mp4",
+    audioSrc: "Branches (Afrobeat).mp4",
     releaseDate: "2025-07-22",
     moods: ["groovy", "upbeat", "storytelling"],
     tags: ["Git", "Development"],
@@ -104,7 +113,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Ethiopian jazz fusion with traditional shoulder dance vibes—celebrating the triumph over pesky bugs with cultural flair.",
     category: "Ethiopian Jazz",
-    audioSrc: "/music/Bug Eskista (Ethiopian Jazz 🇪🇹).mp4",
+    audioSrc: "Bug Eskista (Ethiopian Jazz 🇪🇹).mp4",
     releaseDate: "2025-07-20",
     moods: ["celebratory", "upbeat", "playful"],
     tags: ["Debugging", "Ethiopian", "Jazz"],
@@ -116,7 +125,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Hard-hitting hip-hop beats for when you're in the zone—rhymes about algorithms, loops, and the hustle of development life.",
     category: "HipHop",
-    audioSrc: "/music/Code and Flow (HipHop).mp4",
+    audioSrc: "Code and Flow (HipHop).mp4",
     releaseDate: "2025-07-15",
     moods: ["focus", "energetic", "upbeat"],
     tags: ["Productivity", "Hip-Hop"],
@@ -128,7 +137,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Mellow Gondwana reggae vibes for those moments when the deadline looms—chill yet purposeful, keeping you grounded under pressure.",
     category: "Gondwana",
-    audioSrc: "/music/Deadline close (Gondwana).mp4",
+    audioSrc: "Deadline close (Gondwana).mp4",
     releaseDate: "2025-07-28",
     moods: ["chill", "focus", "melancholic"],
     tags: ["Deadlines", "Reggae", "Chill"],
@@ -140,7 +149,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Smooth Amapiano grooves with deep basslines—perfect for those late-night coding marathons when coffee kicks in.",
     category: "Amapiano",
-    audioSrc: "/music/Eyes so wide (Amapiano).mp4",
+    audioSrc: "Eyes so wide (Amapiano).mp4",
     releaseDate: "2025-07-19",
     moods: ["groovy", "chill", "upbeat"],
     tags: ["Late Night", "Amapiano"],
@@ -152,7 +161,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Silky smooth R&B celebrating elegant code and clean architecture—soulful vocals over sophisticated beats.",
     category: "RnB",
-    audioSrc: "/music/Fine Code Lines (RnB).mp4",
+    audioSrc: "Fine Code Lines (RnB).mp4",
     releaseDate: "2025-07-17",
     moods: ["soulful", "romantic", "chill"],
     tags: ["Clean Code", "R&B"],
@@ -164,7 +173,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Infectious Amapiano rhythms designed for the hackathon grind—keeping energy high through every sprint and pivot.",
     category: "Amapiano",
-    audioSrc: "/music/Hackathon Groove (Amapiano).mp4",
+    audioSrc: "Hackathon Groove (Amapiano).mp4",
     releaseDate: "2025-07-24",
     moods: ["energetic", "groovy", "upbeat"],
     tags: ["Hackathon", "Energy"],
@@ -176,7 +185,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Fast-paced Genge beats capturing the intensity of hackathon marathons—rapid flows and driving rhythms for non-stop coding.",
     category: "Genge",
-    audioSrc: "/music/Hackathon Marathon (Genge).mp4",
+    audioSrc: "Hackathon Marathon (Genge).mp4",
     releaseDate: "2025-07-26",
     moods: ["energetic", "upbeat", "playful"],
     tags: ["Hackathon", "Genge"],
@@ -188,7 +197,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Fresh stories told through Bongo Flava—every project has a new tale, and this track brings them to life with catchy melodies.",
     category: "Bongo",
-    audioSrc: "/music/Hadithi Mpya (Bongo).mp4",
+    audioSrc: "Hadithi Mpya (Bongo).mp4",
     releaseDate: "2025-07-21",
     moods: ["storytelling", "upbeat", "playful"],
     tags: ["Stories", "Bongo"],
@@ -200,7 +209,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "AfroRnB fusion celebrating the work of coding—smooth vocals layered over contemporary Afro beats about dedication and craft.",
     category: "AfroRnB",
-    audioSrc: "/music/Kazi ni Code (AfroRnB).mp4",
+    audioSrc: "Kazi ni Code (AfroRnB).mp4",
     releaseDate: "2025-07-23",
     moods: ["soulful", "upbeat", "storytelling"],
     tags: ["Work", "AfroRnB"],
@@ -212,7 +221,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Poetic Taarab melodies lamenting the love-hate relationship with bugs—romantic yet melancholic, like debugging at midnight.",
     category: "Taarab",
-    audioSrc: "/music/Mapenzi na bug, ni mateso (Coastal Taarab).mp4",
+    audioSrc: "Mapenzi na bug, ni mateso (Coastal Taarab).mp4",
     releaseDate: "2025-07-16",
     moods: ["romantic", "melancholic", "storytelling"],
     tags: ["Debugging", "Taarab", "Poetry"],
@@ -224,7 +233,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Genge track about the drama of merge conflicts—rapid verses and energetic beats for when git gets complicated.",
     category: "Genge",
-    audioSrc: "/music/Merge Conflict Extended (Genge).mp4",
+    audioSrc: "Merge Conflict Extended (Genge).mp4",
     releaseDate: "2025-07-27",
     moods: ["energetic", "playful", "storytelling"],
     tags: ["Git", "Merge Conflicts"],
@@ -236,7 +245,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Laid-back reggae vibes celebrating unity in coding—one codebase, one team, one love. Perfect for collaborative sessions.",
     category: "Reggae",
-    audioSrc: "/music/One Code One Love Part II (Reggae).mp4",
+    audioSrc: "One Code One Love Part II (Reggae).mp4",
     releaseDate: "2025-07-29",
     moods: ["chill", "upbeat", "celebratory"],
     tags: ["Collaboration", "Reggae"],
@@ -248,7 +257,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "High-energy dancehall anthem for pulling up to hackathons—infectious riddims and confident flows about showing up ready to code.",
     category: "Dancehall",
-    audioSrc: "/music/Pull up To De Hackaton (Dancehall).mp4",
+    audioSrc: "Pull up To De Hackaton (Dancehall).mp4",
     releaseDate: "2025-07-30",
     moods: ["energetic", "upbeat", "celebratory"],
     tags: ["Hackathon", "Dancehall"],
@@ -260,7 +269,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Reflective Gondwana reggae about perseverance in development—even when bugs persist and features break, still we try.",
     category: "Gondwana",
-    audioSrc: "/music/Still We Try (Gondwana).mp4",
+    audioSrc: "Still We Try (Gondwana).mp4",
     releaseDate: "2025-07-31",
     moods: ["chill", "melancholic", "storytelling"],
     tags: ["Perseverance", "Reggae"],
@@ -272,7 +281,7 @@ export const musicTracks: MusicTrack[] = [
     description:
       "Bongo Flava heartbreak anthem about Wi-Fi letting you down—catchy hooks and relatable lyrics for every developer's connectivity woes.",
     category: "Bongo",
-    audioSrc: "/music/Wi-Fi umeniacha Extended (Bongo).mp4",
+    audioSrc: "Wi-Fi umeniacha Extended (Bongo).mp4",
     releaseDate: "2025-08-01",
     moods: ["playful", "melancholic", "storytelling"],
     tags: ["Connectivity", "Bongo"],
