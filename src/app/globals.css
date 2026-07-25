@@ -1,59 +1,148 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #111111;
-  --primary-foreground: #ffffff;
-  --secondary: #e5e7eb;
-  --secondary-foreground: #111111;
-  --accent: #d1d5db;
-  --accent-foreground: #111111;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
-  --card: #ffffff;
-  --card-foreground: #171717;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
-  --ring: #111111;
+/* Enable class-based dark mode (next-themes toggles the `.dark` class). */
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* New font vars */
-  --font-sans: var(--font-sans);
-  --font-display: var(--font-display);
-  --font-hand: var(--font-hand);
+/*
+  Design system — "Engineering field notes"
+  Warm paper + warm ink with a single clay accent. Bricolage Grotesque for
+  display, Inter for body, JetBrains Mono for index labels.
+*/
+:root {
+  --background: #f6f2ec;   /* warm paper */
+  --surface: #fbf8f3;      /* raised card */
+  --foreground: #221d17;   /* warm ink */
+  --muted: #ece5da;        /* subtle fill */
+  --muted-foreground: #6a6256;
+  --border: #e0d7c9;       /* hairline */
+  --card: #fbf8f3;
+  --card-foreground: #221d17;
+  --primary: #221d17;
+  --primary-foreground: #f6f2ec;
+  --secondary: #ece5da;
+  --secondary-foreground: #221d17;
+  --accent: #c65a37;       /* clay / terracotta */
+  --accent-foreground: #ffffff;
+  --accent-soft: #f0d9cd;  /* tinted accent fill */
+  --ring: #c65a37;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --primary: #fafafa;
-  --primary-foreground: #0a0a0a;
-  --secondary: #1f2937;
-  --secondary-foreground: #fafafa;
-  --accent: #111827;
-  --accent-foreground: #fafafa;
-  --muted: #111111;
-  --muted-foreground: #9ca3af;
-  --card: #0a0a0a;
-  --card-foreground: #fafafa;
-  --border: #1f2937;
-  --input: #1f2937;
-  --ring: #ffffff;
+  --background: #141109;   /* warm near-black */
+  --surface: #1d1810;      /* raised card */
+  --foreground: #f3ede2;
+  --muted: #211b12;
+  --muted-foreground: #a49a88;
+  --border: #2f2718;
+  --card: #1d1810;
+  --card-foreground: #f3ede2;
+  --primary: #f3ede2;
+  --primary-foreground: #141109;
+  --secondary: #211b12;
+  --secondary-foreground: #f3ede2;
+  --accent: #e2764e;       /* brighter clay for dark */
+  --accent-foreground: #141109;
+  --accent-soft: #2c1d13;
+  --ring: #e2764e;
 }
 
-html, body {
+/*
+  Map CSS variables to Tailwind color/font utilities. `inline` keeps the
+  reference to the raw var so the `.dark` overrides above take effect at
+  runtime (bg-background, text-muted-foreground, border-border, etc.).
+*/
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-mono: var(--font-jbmono), ui-monospace, "SFMono-Regular", Menlo,
+    monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
   overflow-x: hidden;
   width: 100%;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Headings use display (Inter as well) */
-.h1, h1, h2, h3, .font-display { font-family: var(--font-display, var(--font-sans)); }
+/* Display face for headings, tightened for a modern editorial feel. */
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
 
-/* Selection */
-::selection { background-color: #000; color: #fff; }
+/* Monospace index label — the site's signature detail. */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
 
-/* Keep a simple utility for a hand font (notes) */
-.font-hand { font-family: var(--font-hand, var(--font-display)); }
+/* Hairline rule that matches the theme border. */
+.hairline {
+  border-color: var(--border);
+}
+
+::selection {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Blinking terminal cursor accent used in the hero. */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret {
+  display: inline-block;
+  width: 0.6ch;
+  background: var(--accent);
+  animation: caret-blink 1.1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .caret {
+    animation: none;
+  }
+}

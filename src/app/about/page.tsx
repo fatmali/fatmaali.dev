@@ -7,18 +7,18 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About | Fatma Ali',
-  description: 'About Fatma Ali — Frontend Engineer building AI-powered productivity experiences (React, TypeScript, Next.js, ML at Georgia Tech).',
+  description: 'About Fatma Ali — Senior Software Engineer at Microsoft building Microsoft 365 Copilot and agent experiences (React, TypeScript, C#/.NET). M.S. CS, AI specialization, at Georgia Tech.',
   alternates: { canonical: 'https://fatmaali.dev/about' },
   openGraph: {
     title: 'About | Fatma Ali',
-    description: 'Frontend Engineer focusing on AI productivity, UX, and scalable web architecture.',
+    description: 'Senior Software Engineer at Microsoft focusing on AI productivity, UX, and scalable full-stack architecture.',
     url: 'https://fatmaali.dev/about',
     type: 'profile'
   },
   twitter: {
     card: 'summary_large_image',
     title: 'About | Fatma Ali',
-    description: 'Frontend Engineer focused on AI-enhanced developer productivity and modern web craftsmanship.'
+    description: 'Senior Software Engineer focused on AI-enhanced productivity, LLM-powered experiences, and modern full-stack craftsmanship.'
   }
 };
 
@@ -27,8 +27,8 @@ export default function AboutPage() {
     <>
       <HeroSection />
       <AboutSection ctaHref="#contact" />
-      <SkillsSection />
       <ProjectsSection />
+      <SkillsSection />
       <ContactSection />
     </>
   );

@@ -1,5 +1,5 @@
 import "./globals.css"
-import { Inter, Caveat } from "next/font/google"
+import { Inter, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ToastProvider } from "@/components/toast-provider"
 import GoogleAnalytics from "@/components/google-analytics"
@@ -7,23 +7,24 @@ import Script from "next/script"
 import { Suspense } from "react"
 import { MainLayout } from "@/components/layout/MainLayout"
 
-// Inter as base and display font
+// Inter for body copy
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
 })
 
-const interDisplay = Inter({
+// Bricolage Grotesque — characterful display face for headings
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-bricolage",
   display: "swap",
 })
 
-// Caveat for handwritten sticky notes
-const caveat = Caveat({
+// JetBrains Mono — index labels and code accents
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-hand",
+  variable: "--font-jbmono",
   display: "swap",
 })
 
@@ -107,6 +108,10 @@ export default function RootLayout({
                 alumniOf: [
                   {
                     '@type': 'CollegeOrUniversity',
+                    name: 'Georgia Institute of Technology'
+                  },
+                  {
+                    '@type': 'CollegeOrUniversity',
                     name: 'University of Eldoret'
                   }
                 ],
@@ -137,7 +142,7 @@ export default function RootLayout({
           <GoogleAnalytics />
         </Suspense>
       </head>
-      <body className={`${inter.variable} ${interDisplay.variable} ${caveat.variable}`}>
+      <body className={`${inter.variable} ${bricolage.variable} ${jetbrainsMono.variable}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

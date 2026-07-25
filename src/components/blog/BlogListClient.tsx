@@ -30,18 +30,18 @@ export default function BlogListClient({ posts }: Props) {
           placeholder="Search posts..."
           value={query}
           onChange={e => setQuery(e.target.value)}
-          className="w-full md:max-w-sm rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="w-full md:max-w-sm rounded-full border border-border bg-background px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/50 transition-colors"
         />
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTag(null)}
-            className={cn('px-2 py-1 rounded-md text-xs border', activeTag === null ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted hover:bg-muted/70')}
+            className={cn('px-3 py-1 rounded-full text-xs border transition-colors', activeTag === null ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:border-accent hover:text-accent')}
           >All</button>
           {tags.map(tag => (
             <button
               key={tag}
               onClick={() => setActiveTag(tag === activeTag ? null : tag)}
-              className={cn('px-2 py-1 rounded-md text-xs border transition', activeTag === tag ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted hover:bg-muted/70')}
+              className={cn('px-3 py-1 rounded-full text-xs border transition-colors', activeTag === tag ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:border-accent hover:text-accent')}
             >{tag}</button>
           ))}
         </div>
