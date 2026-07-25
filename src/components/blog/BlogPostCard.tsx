@@ -17,7 +17,7 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="bg-card text-card-foreground rounded-lg overflow-hidden border border-border flex flex-col h-full"
+      className="group bg-card text-card-foreground rounded-2xl overflow-hidden border border-border flex flex-col h-full hover:border-accent/50 transition-colors"
     >
       <Link href={`/blog/${post.slug}`} className="block h-48 relative overflow-hidden">
         <Image
@@ -37,7 +37,7 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
         </div>
         
         <h2 className="text-xl font-semibold mb-2">
-          <Link href={`/blog/${post.slug}`} className="hover:text-primary transition-colors">
+          <Link href={`/blog/${post.slug}`} className="group-hover:text-accent transition-colors">
             {post.title}
           </Link>
         </h2>

@@ -27,8 +27,8 @@ export default function AboutPage() {
     <>
       <HeroSection />
       <AboutSection ctaHref="#contact" />
-      <SkillsSection />
       <ProjectsSection />
+      <SkillsSection />
       <ContactSection />
     </>
   );

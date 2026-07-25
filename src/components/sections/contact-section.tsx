@@ -5,7 +5,6 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import Turnstile from "../Turnstile";
 import { trackEvents } from "../google-analytics";
-import { StickyNote } from "../ui/StickyNote";
 
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,45 +87,23 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-32 relative">
-      {/* Decorative sticky notes */}
-      <div className="pointer-events-none select-none absolute inset-0">
-        <StickyNote
-          className="hidden lg:block absolute top-16 left-8"
-          size="sm"
-          color="bg-blue-200"
-          rotate={-15}
-        >
-          let&apos;s
-          build
-          together
-        </StickyNote>
-        
-        <StickyNote
-          className="hidden lg:block absolute top-32 right-12"
-          size="sm"
-          color="bg-yellow-200"
-          rotate={8}
-        >
-          coffee
-          chat? ☕
-        </StickyNote>
-      </div>
-
+    <section id="contact" className="py-24 md:py-32 relative bg-surface">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section title */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="max-w-2xl mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Let&apos;s work together</h2>
-          <div className="w-16 h-0.5 bg-foreground mx-auto mb-6"></div>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Have a project in mind? Need help with your software? Or just want to chat about tech? 
-            I&apos;d love to hear from you.
+          <span className="mono-label">004 — Contact</span>
+          <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">
+            Let&apos;s build something.
+          </h2>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Have a project in mind, want to collaborate, or just fancy a coffee
+            chat about tech? My inbox is open.
           </p>
         </motion.div>
 
