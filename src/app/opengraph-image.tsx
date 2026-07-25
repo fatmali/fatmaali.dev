@@ -71,7 +71,7 @@ export default async function Image() {
           zIndex: 10
         }}>
           <div style={{ fontSize: 72, fontWeight: 'bold', marginBottom: 10 }}>Fatma Ali</div>
-          <div style={{ fontSize: 36, fontWeight: 'normal', color: '#d1d5db' }}>Senior Software Engineer</div>
+          <div style={{ fontSize: 36, fontWeight: 'normal', color: '#d1d5db' }}>Senior Software Engineer, Full Stack · Microsoft</div>
           <div style={{
             display: 'flex',
             marginTop: 20,
