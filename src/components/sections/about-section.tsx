@@ -43,6 +43,13 @@ const education = [
   },
 ];
 
+const stats = [
+  { value: "7+", label: "Years shipping product" },
+  { value: "70+", label: "Copilot & agent experiences" },
+  { value: "200K+", label: "Patients served" },
+  { value: "~30%", label: "Efficiency gained" },
+];
+
 export function AboutSection({ ctaHref = "#contact" }: AboutSectionProps) {
   return (
     <section className="py-24 md:py-32 relative bg-surface" id="about">
@@ -57,15 +64,35 @@ export function AboutSection({ ctaHref = "#contact" }: AboutSectionProps) {
         >
           <span className="mono-label">001 — Background</span>
           <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-            I build across the whole stack.
+            An AI-native, full-stack engineer.
           </h2>
           <p className="mt-6 text-muted-foreground leading-relaxed">
             Seven-plus years shipping user-facing product from database to
-            pixel — today that&apos;s AI-powered Copilot experiences at
-            Microsoft; before that, health platforms serving hundreds of
-            thousands of patients across Kenya. I like owning a feature end to
-            end and sweating both the system design and the last 5% of UX.
+            pixel. Today I build AI-native products at Microsoft — the platform
+            behind 70+ Microsoft 365 Copilot and agent experiences — and work
+            AI-first, with agentic coding tools in my daily loop. Before that,
+            health platforms serving hundreds of thousands of patients across
+            Kenya. I like owning a feature end to end and sweating both the
+            system design and the last 5% of UX.
           </p>
+        </motion.div>
+
+        {/* Impact at a glance */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, delay: 0.05 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border rounded-2xl overflow-hidden mb-16 md:mb-20"
+        >
+          {stats.map((stat) => (
+            <div key={stat.label} className="bg-card p-6 md:p-7">
+              <div className="font-display text-3xl md:text-4xl font-bold tracking-tight">
+                {stat.value}
+              </div>
+              <div className="mono-label mt-2 leading-snug">{stat.label}</div>
+            </div>
+          ))}
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
