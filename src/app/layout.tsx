@@ -108,6 +108,10 @@ export default function RootLayout({
                 alumniOf: [
                   {
                     '@type': 'CollegeOrUniversity',
+                    name: 'Georgia Institute of Technology'
+                  },
+                  {
+                    '@type': 'CollegeOrUniversity',
                     name: 'University of Eldoret'
                   }
                 ],

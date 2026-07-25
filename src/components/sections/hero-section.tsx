@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-const stack = ["TypeScript", "React", "Next.js", "Node.js", "Machine Learning"];
+const stack = ["TypeScript", "React", "Next.js", "Relay", "C# / .NET", "Node.js"];
 
 export function HeroSection() {
   const scrollToAbout = () => {
@@ -49,9 +49,10 @@ export function HeroSection() {
           >
             I&apos;m{" "}
             <span className="text-foreground font-medium">Fatma Ali</span> — a
-            software engineer at Microsoft working on M365 Copilot, and a
-            perpetual builder of small, useful tools. Bollywood dancer when the
-            tests pass.
+            senior software engineer at Microsoft building the front ends behind
+            70+ Microsoft 365 Copilot and agent experiences. Full-stack for 7+
+            years, and a perpetual builder of small, useful tools. Bollywood
+            dancer when the tests pass.
           </motion.p>
 
           {/* CTAs */}

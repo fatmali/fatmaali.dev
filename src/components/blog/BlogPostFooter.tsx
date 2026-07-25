@@ -31,7 +31,7 @@ export default function BlogPostFooter({ author, relatedPosts }: BlogPostFooterP
         <div>
           <h3 className="font-medium">{author}</h3>
           <p className="text-sm text-muted-foreground">
-            Frontend Engineer specializing in React, TypeScript, and Next.js
+            Senior Software Engineer at Microsoft — React, TypeScript, and full-stack craft
           </p>
         </div>
       </motion.div>

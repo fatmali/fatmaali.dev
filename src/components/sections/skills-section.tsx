@@ -4,16 +4,21 @@ import { motion } from "framer-motion";
 
 const groups = [
   {
-    label: "Core",
-    items: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
+    label: "Frontend",
+    items: ["React", "TypeScript", "Next.js", "Relay", "Angular", "SSR & PWAs"],
   },
   {
-    label: "Backend",
-    items: ["Node.js", "PostgreSQL", "GraphQL"],
+    label: "Backend & APIs",
+    items: ["C# / .NET", "Node.js", "Python", "GraphQL", "PostgreSQL", "Azure"],
   },
   {
-    label: "Cloud & data",
-    items: ["Azure", "AWS", "Supabase", "Machine Learning"],
+    label: "AI & LLM",
+    items: [
+      "LLM conversational systems",
+      "Agent platforms",
+      "Claude Code",
+      "GitHub Copilot",
+    ],
   },
 ];
 

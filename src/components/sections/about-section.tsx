@@ -9,21 +9,21 @@ interface AboutSectionProps {
 const facts = [
   {
     label: "At work",
-    title: "Microsoft · M365 Copilot",
+    title: "Senior Engineer · Microsoft",
     description:
-      "Building AI-powered productivity and collaboration experiences — human-centered UX on top of scalable systems.",
+      "Designing and building the front ends and platform behind 70+ Microsoft 365 Copilot and agent experiences — React and TypeScript on top of C#/.NET services used by enterprises globally.",
   },
   {
     label: "Studying",
-    title: "MSc Computer Science",
+    title: "M.S. CS · Georgia Tech",
     description:
-      "Master's at Georgia Tech with a Machine Learning specialization, connecting AI research to things people actually use.",
+      "OMSCS with an Artificial Intelligence specialization and graduate HCI coursework in interaction design and usability evaluation.",
   },
   {
     label: "Craft",
-    title: "React · TypeScript · Next.js",
+    title: "Full-stack, leaning front end",
     description:
-      "Clean code, great developer experience, and architectures that ship fast and stay maintainable.",
+      "Seven-plus years shipping user-facing product end to end — React, TypeScript, Relay, and GraphQL up front; C#/.NET, Python, and Postgres behind it.",
   },
 ];
 
