@@ -27,13 +27,14 @@ export default async function RootPage() {
 	return (
 		<>
 			<HeroSection />
+			<AboutSection ctaHref="/contact" />
 			<ProjectsSection />
 
 			{/* Latest writing */}
 			<section className="py-24 md:py-32 bg-surface">
 				<div className="container mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="max-w-2xl mb-16">
-						<span className="mono-label">005 — Writing</span>
+						<span className="mono-label">003 — Writing</span>
 						<h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">From the blog.</h2>
 						<p className="mt-4 text-muted-foreground leading-relaxed">
 							Notes on software development, React, Next.js, AI-assisted
@@ -43,8 +44,6 @@ export default async function RootPage() {
 					<BlogListClient posts={posts} />
 				</div>
 			</section>
-
-			<AboutSection ctaHref="/contact" />
 		</>
 	);
 }

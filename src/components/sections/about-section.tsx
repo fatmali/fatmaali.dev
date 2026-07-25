@@ -6,24 +6,40 @@ interface AboutSectionProps {
   ctaHref?: string; // default '#contact' for backward compatibility
 }
 
-const facts = [
+const experience = [
   {
-    label: "At work",
-    title: "Senior Engineer · Microsoft",
+    period: "May 2021 — Present",
+    role: "Senior Software Engineer",
+    company: "Microsoft",
     description:
-      "Designing and building the front ends and platform behind 70+ Microsoft 365 Copilot and agent experiences — React and TypeScript on top of C#/.NET services used by enterprises globally.",
+      "Design and build the interfaces and platform behind 70+ first-party Microsoft 365 Copilot and agent experiences — React and TypeScript front ends on top of C#/.NET services used by enterprises globally. Ship features end to end and help set product direction.",
   },
   {
-    label: "Studying",
-    title: "M.S. CS · Georgia Tech",
+    period: "Jul 2020 — Apr 2021",
+    role: "Software Engineer",
+    company: "Antara Health",
     description:
-      "OMSCS with an Artificial Intelligence specialization and graduate HCI coursework in interaction design and usability evaluation.",
+      "Built full-stack features for a chronic-care health navigation platform — Django services and REST APIs on PostgreSQL with responsive React front ends — improving patient access efficiency by ~30%.",
   },
   {
-    label: "Craft",
-    title: "Full-stack, leaning front end",
+    period: "Sep 2018 — Feb 2020",
+    role: "Software Engineer",
+    company: "AMPATH",
     description:
-      "Seven-plus years shipping user-facing product end to end — React, TypeScript, Relay, and GraphQL up front; C#/.NET, Python, and Postgres behind it.",
+      "Worked across front end and back end on Kenya's first point-of-care medical system (OpenMRS — Angular + MySQL), supporting care for 200,000+ HIV patients and the move from paper to digital records.",
+  },
+];
+
+const education = [
+  {
+    period: "Aug 2025 — Present",
+    school: "Georgia Institute of Technology",
+    detail: "M.S. Computer Science (OMSCS) · Artificial Intelligence specialization",
+  },
+  {
+    period: "2014 — 2017",
+    school: "University of Eldoret",
+    detail: "B.Sc. Information Technology",
   },
 ];
 
@@ -31,57 +47,101 @@ export function AboutSection({ ctaHref = "#contact" }: AboutSectionProps) {
   return (
     <section className="py-24 md:py-32 relative bg-surface" id="about">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Lead */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="max-w-2xl mb-16 md:mb-20"
+        >
+          <span className="mono-label">001 — Background</span>
+          <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight leading-tight">
+            I build across the whole stack.
+          </h2>
+          <p className="mt-6 text-muted-foreground leading-relaxed">
+            Seven-plus years shipping user-facing product from database to
+            pixel — today that&apos;s AI-powered Copilot experiences at
+            Microsoft; before that, health platforms serving hundreds of
+            thousands of patients across Kenya. I like owning a feature end to
+            end and sweating both the system design and the last 5% of UX.
+          </p>
+        </motion.div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* Lead */}
+          {/* Experience */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-5"
+            className="lg:col-span-8"
           >
-            <span className="mono-label">001 — About</span>
-            <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight leading-tight">
-              Engineer by day, relentless tinkerer the rest of the time.
-            </h2>
-            <p className="mt-6 text-muted-foreground leading-relaxed">
-              I care about the seam where thoughtful design meets solid
-              engineering — where a product feels effortless because the system
-              underneath it is genuinely well built. Most of what I make starts
-              as a small problem in my own day.
-            </p>
-          </motion.div>
-
-          {/* Facts */}
-          <div className="lg:col-span-7 lg:pt-2">
-            <div className="divide-y divide-border border-y border-border">
-              {facts.map((fact, i) => (
-                <motion.div
-                  key={fact.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                  className="py-6 grid grid-cols-1 sm:grid-cols-[9rem_1fr] gap-2 sm:gap-6"
-                >
-                  <span className="mono-label pt-1">{fact.label}</span>
-                  <div>
-                    <h3 className="font-semibold text-lg">{fact.title}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                      {fact.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+            <div className="flex items-center gap-3 mb-6">
+              <span className="mono-label">Experience</span>
+              <span className="h-px flex-1 bg-border" />
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-10 flex items-center gap-4 flex-wrap"
-            >
+            <ol className="relative">
+              {experience.map((job, i) => (
+                <motion.li
+                  key={job.company}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  className="grid grid-cols-1 sm:grid-cols-[11rem_1fr] gap-2 sm:gap-6 py-6 border-t border-border first:border-t-0"
+                >
+                  <span className="font-mono text-xs text-muted-foreground pt-1">
+                    {job.period}
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      {job.role}{" "}
+                      <span className="text-accent">· {job.company}</span>
+                    </h3>
+                    <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
+                      {job.description}
+                    </p>
+                  </div>
+                </motion.li>
+              ))}
+            </ol>
+          </motion.div>
+
+          {/* Education */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-4"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <span className="mono-label">Education</span>
+              <span className="h-px flex-1 bg-border" />
+            </div>
+
+            <ul className="space-y-6">
+              {education.map((edu) => (
+                <li
+                  key={edu.school}
+                  className="border-l-2 border-accent/40 pl-4"
+                >
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {edu.period}
+                  </span>
+                  <h3 className="mt-1 font-semibold leading-snug">
+                    {edu.school}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                    {edu.detail}
+                  </p>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex flex-col items-start gap-4">
               <a
                 href={ctaHref}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
@@ -109,8 +169,8 @@ export function AboutSection({ ctaHref = "#contact" }: AboutSectionProps) {
               >
                 Download résumé →
               </a>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
