@@ -23,7 +23,7 @@ export function HeroSection() {
           >
             <span className="mono-label">Nairobi · Kenya</span>
             <span className="h-px w-8 bg-border" />
-            <span className="mono-label">Senior Full-Stack Engineer</span>
+            <span className="mono-label">Senior Software Engineer, Full Stack</span>
           </motion.div>
 
           {/* Thesis headline */}
@@ -49,7 +49,7 @@ export function HeroSection() {
           >
             I&apos;m{" "}
             <span className="text-foreground font-medium">Fatma Ali</span> — a
-            senior full-stack engineer at Microsoft, shipping 70+ Microsoft 365
+            senior software engineer at Microsoft, shipping 70+ Microsoft 365
             Copilot and agent experiences end to end: from React and TypeScript
             interfaces to the C#/.NET services behind them. Seven-plus years
             building product, and a perpetual builder of small tools. Bollywood

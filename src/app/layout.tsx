@@ -29,8 +29,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata = {
-  title: "Fatma Ali | Senior Full-Stack Engineer at Microsoft",
-  description: "Senior full-stack engineer at Microsoft building AI-native Microsoft 365 Copilot and agent experiences end to end — React, TypeScript, C#/.NET. 7+ years shipping product, from database to pixel.",
+  title: "Fatma Ali | Senior Software Engineer, Full Stack — Microsoft",
+  description: "Senior Software Engineer (Full Stack) at Microsoft building AI-native Microsoft 365 Copilot and agent experiences end to end — React, TypeScript, C#/.NET. 7+ years shipping product, from database to pixel.",
   metadataBase: new URL('https://fatmaali.dev'),
   keywords: [
     'Senior Full-Stack Engineer','Full Stack Engineer','Microsoft','M365 Copilot','AI Engineer','LLM','React','TypeScript','C#','.NET','Next.js','GraphQL','PostgreSQL','Software Engineer','Portfolio'
@@ -54,7 +54,7 @@ export const metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://fatmaali.dev',
-    title: 'Fatma Ali | Senior Full-Stack Engineer at Microsoft',
+    title: 'Fatma Ali | Senior Software Engineer, Full Stack — Microsoft',
     description: 'AI-native, full-stack engineering — M365 Copilot & agent experiences, end to end. React, TypeScript, C#/.NET.',
     siteName: 'Fatma Ali Portfolio',
     images: [
@@ -62,7 +62,7 @@ export const metadata = {
         url: '/images/headshot.JPG',
         width: 1200,
         height: 630,
-        alt: 'Fatma Ali - Senior Full-Stack Engineer',
+        alt: 'Fatma Ali - Senior Software Engineer, Full Stack',
       },
     ],
   },
@@ -70,7 +70,7 @@ export const metadata = {
     card: 'summary_large_image',
     site: '@_fatmali',
     creator: '@_fatmali',
-    title: 'Fatma Ali | Senior Full-Stack Engineer at Microsoft',
+    title: 'Fatma Ali | Senior Software Engineer, Full Stack — Microsoft',
     description: 'AI-native, full-stack engineering — M365 Copilot & agent experiences, end to end. React • TypeScript • C#/.NET.',
     images: ['/images/headshot.JPG']
   },

@@ -71,7 +71,7 @@ const statusStyles: Record<Project["status"], string> = {
   Building: "text-muted-foreground",
 };
 
-export function ProjectsSection() {
+export function ProjectsSection({ index = "002" }: { index?: string }) {
   return (
     <section id="projects" className="py-24 md:py-32 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,7 +83,7 @@ export function ProjectsSection() {
           transition={{ duration: 0.6 }}
           className="max-w-2xl mb-16 md:mb-20"
         >
-          <span className="mono-label">002 — Selected builds</span>
+          <span className="mono-label">{index} — Selected builds</span>
           <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">
             Things I&apos;ve been vibecoding.
           </h2>
