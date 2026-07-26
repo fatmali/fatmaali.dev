@@ -68,8 +68,6 @@ A **finite state machine (FSM)** is a computational model that can be in exactly
 
 The key insight: **you can only be in one state at a time**. No overlapping, no ambiguity.
 
-#### A Simple Example
-
 Imagine a traffic light:
 
 ```typescript
@@ -110,13 +108,13 @@ Benefits for frontend applications:
 
 For simple forms or basic data fetching, this might be overkill. But for AI-powered features with streaming, retries, cancellation, and complex error recovery? State machines are the appropriate abstraction.
 
-## From Theory to Practice: Building State Machines in React
+## Building State Machines in React
 
 Now that we understand what state machines are, let's see how to actually implement them in React. We'll start simple and progressively handle more complexity.
 
-### The Real-World Scenario: AI Streaming Complexity
+### AI Streaming UX
 
-Before we dive into solutions, let's be clear about what we're building. What seems like a simple "type a prompt, get a response" feature actually has **real-world challenges** that break simple state management:
+Before we dive into solutions, let's be clear about what we're building. What seems like a simple "type a prompt, get a response" feature actually has **challenges** that break simple state management:
 
 ```text
 idle → connecting → streaming → complete
@@ -128,7 +126,7 @@ idle → connecting → streaming → complete
 
 Your `useReducer` machine, which happily handled `loading` and `success`, suddenly feels inadequate. Here are the **actual production scenarios** you need to handle:
 
-#### The Real Challenges (Not Mocked Timers)
+#### The Challenges
 
 **1. Race Conditions**
 - User submits a prompt → starts streaming

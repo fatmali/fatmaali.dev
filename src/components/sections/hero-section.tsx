@@ -21,8 +21,6 @@ export function HeroSection() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-3 mb-7"
           >
-            <span className="mono-label">Nairobi · Kenya</span>
-            <span className="h-px w-8 bg-border" />
             <span className="mono-label">Senior Software Engineer, Full Stack</span>
           </motion.div>
 
