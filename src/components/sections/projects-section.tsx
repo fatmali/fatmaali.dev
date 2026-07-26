@@ -83,13 +83,13 @@ export function ProjectsSection({ index = "002" }: { index?: string }) {
           transition={{ duration: 0.6 }}
           className="max-w-2xl mb-16 md:mb-20"
         >
-          <span className="mono-label">{index} — Selected builds</span>
+          <span className="mono-label">{index} — Fun side projects</span>
           <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">
-            Things I&apos;ve been vibecoding.
+            Fun side projects.
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Small, opinionated tools I build for the fun of it — usually to
-            scratch a personal itch, always shipped in public.
+            Small, opinionated tools I build because I can&apos;t help myself.
+            Usually to scratch a personal itch, always shipped in public.
           </p>
         </motion.div>
 

@@ -1,5 +1,4 @@
 import { getAllPosts } from '@/lib/blog';
-import BlogListClient from '@/components/blog/BlogListClient';
 import type { Metadata } from 'next';
 import { HeroSection } from '@/components/sections/hero-section';
 import { ProjectsSection } from '@/components/sections/projects-section';
@@ -8,7 +7,7 @@ import BlogPageClient from '@/components/blog/BlogPageClient';
 
 export const metadata: Metadata = {
 	title: 'Fatma Ali — Senior Software Engineer',
-	description: 'Senior Software Engineer building AI-powered productivity experiences at Microsoft (M365 Copilot). Vibecoding small tools, writing about React, TypeScript, Next.js, and software craft.',
+	description: 'Senior Software Engineer building AI-powered productivity experiences at Microsoft (M365 Copilot). Building fun side projects, writing about React, TypeScript, Next.js, and software craft.',
 	alternates: { canonical: 'https://fatmaali.dev/' },
 	openGraph: {
 		type: 'website',
@@ -41,7 +40,7 @@ export default async function RootPage() {
 							productivity, and the craft of shipping.
 						</p>
 					</div>
-					<BlogListClient posts={posts} />
+					<BlogPageClient posts={posts} />
 				</div>
 			</section>
 

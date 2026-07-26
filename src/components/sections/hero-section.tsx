@@ -36,8 +36,7 @@ export function HeroSection() {
             I build AI-powered
             <br />
             productivity experiences
-            <span className="text-accent">.</span>
-            <span className="caret ml-2 align-baseline h-[0.8em]" />
+            <span className="whitespace-nowrap"><span className="text-accent">.</span><span className="caret ml-2 align-baseline h-[0.8em]" /></span>
           </motion.h1>
 
           {/* Intro */}
@@ -47,13 +46,13 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mt-8 max-w-2xl text-lg text-muted-foreground leading-relaxed"
           >
-            I&apos;m{" "}
-            <span className="text-foreground font-medium">Fatma Ali</span> — a
-            senior software engineer at Microsoft, shipping 70+ Microsoft 365
-            Copilot and agent experiences end to end: from React and TypeScript
-            interfaces to the C#/.NET services behind them. Seven-plus years
-            building product, and a perpetual builder of small tools. Bollywood
-            dancer when the tests pass.
+            👋 I&apos;m{" "}
+            <span className="text-foreground font-medium">Fatma</span>! A
+            senior software engineer at Microsoft building the platform that
+            lets 70+ M365 Copilot agents customize their UX, end to end: from
+            React &amp; TypeScript interfaces to the C#/.NET services behind
+            them. 7+ years shipping product, serial builder of small tools
+            nobody asked for, and a Bollywood dancer when the tests pass.
           </motion.p>
 
           {/* CTAs */}
@@ -63,11 +62,11 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="mt-10 flex flex-wrap items-center gap-3"
           >
-            <a
-              href="#projects"
+            <Link
+              href="/about"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
             >
-              See what I&apos;m building
+              View my experience
               <svg
                 width="16"
                 height="16"
@@ -78,9 +77,10 @@ export function HeroSection() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="m6 9 6 6 6-6" />
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
               </svg>
-            </a>
+            </Link>
             <Link
               href="/blog"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-border font-medium hover:border-accent hover:text-accent transition-colors"
@@ -88,6 +88,23 @@ export function HeroSection() {
               Read the blog
             </Link>
           </motion.div>
+
+          {/* Playful aside */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.32 }}
+            className="mt-4 text-sm text-muted-foreground italic"
+          >
+            or{" "}
+            <a
+              href="#projects"
+              className="underline underline-offset-4 decoration-accent/40 hover:text-accent transition-colors not-italic font-medium"
+            >
+              skip the serious stuff
+            </a>
+            {" "}and see my fun side projects ↓
+          </motion.p>
 
           {/* Social row */}
           <motion.div

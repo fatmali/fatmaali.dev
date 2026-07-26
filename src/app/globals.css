@@ -87,7 +87,8 @@ body {
   width: 100%;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -97,13 +98,15 @@ h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-display);
+  font-family: var(--font-bricolage), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
 
 /* Monospace index label — the site's signature detail. */
 .mono-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-jbmono), ui-monospace, "SFMono-Regular", Menlo,
+    monospace;
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;

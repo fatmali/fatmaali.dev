@@ -8,25 +8,39 @@ interface AboutSectionProps {
 
 const experience = [
   {
-    period: "May 2021 — Present",
+    period: "2023 — Present",
     role: "Senior Software Engineer",
     company: "Microsoft",
     description:
-      "Design and build the interfaces and platform behind 70+ first-party Microsoft 365 Copilot and agent experiences — React and TypeScript front ends on top of C#/.NET services used by enterprises globally. Ship features end to end and help set product direction.",
+      "Building the platform powering 70+ first-party M365 Copilot and Agent experiences. Developing full-stack infrastructure, reusable UI systems, and platform capabilities that improve responsiveness and extensibility across AI-powered experiences. Driving architectural improvements focused on scalability, developer experience, and long-term maintainability.",
+  },
+  {
+    period: "May 2021 — 2023",
+    role: "Software Engineer 2",
+    company: "Microsoft",
+    description:
+      "Contributed to Microsoft Search experiences across Microsoft 365, helping users discover files, people, and organizational knowledge at enterprise scale. Built features improving search relevance, responsiveness, and UX across productivity workflows serving millions of users.",
   },
   {
     period: "Jul 2020 — Apr 2021",
     role: "Software Engineer",
     company: "Antara Health",
     description:
-      "Built full-stack features for a chronic-care health navigation platform — Django services and REST APIs on PostgreSQL with responsive React front ends — improving patient access efficiency by ~30%.",
+      "Led the frontend development of the EMR (Electronic Medical Records) and Communications platform that clinicians use to record patient info. Virtual healthcare for patients with chronic conditions, built with React.",
   },
   {
     period: "Sep 2018 — Feb 2020",
     role: "Software Engineer",
     company: "AMPATH",
     description:
-      "Worked across front end and back end on Kenya's first point-of-care medical system (OpenMRS — Angular + MySQL), supporting care for 200,000+ HIV patients and the move from paper to digital records.",
+      "Worked with the engineering team to build Kenya's first Point of Care system using Angular on top of OpenMRS, currently serving 200,000+ HIV patients across Western Kenya in AMPATH's clinics.",
+  },
+  {
+    period: "Aug 2017 — Sep 2018",
+    role: "Contractor Software Engineer",
+    company: "Regenstrief Institute",
+    description:
+      "Contracted to build software tools for AMPATH Medical Records and Point of Care systems. Built a web app that allowed non-technical users to build forms with zero code.",
   },
 ];
 
@@ -46,8 +60,7 @@ const education = [
 const stats = [
   { value: "7+", label: "Years shipping product" },
   { value: "70+", label: "Copilot & agent experiences" },
-  { value: "200K+", label: "Patients served" },
-  { value: "~30%", label: "Efficiency gained" },
+  { value: "M+", label: "Users at scale" },
 ];
 
 export function AboutSection({ ctaHref = "#contact" }: AboutSectionProps) {
@@ -83,7 +96,7 @@ export function AboutSection({ ctaHref = "#contact" }: AboutSectionProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.6, delay: 0.05 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border border border-border rounded-2xl overflow-hidden mb-16 md:mb-20"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border border-border rounded-2xl overflow-hidden mb-16 md:mb-20"
         >
           {stats.map((stat) => (
             <div key={stat.label} className="bg-card p-6 md:p-7">

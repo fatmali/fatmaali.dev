@@ -17,11 +17,11 @@ export function MainLayout({ children }: MainLayoutProps) {
   // hash tracking no longer needed now that we use dedicated routes
   
   const navItems = [
-    { name: "Projects", href: "/#projects" },
+    { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
-  { name: "Music", href: "/ai-beats" },
-    // { name: "Projects", href: "/braindump" },
+    { name: "Music", href: "/ai-beats" },
+    { name: "Projects", href: "/#projects" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -52,7 +52,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`text-sm text-muted-foreground hover:text-accent transition-colors ${activeCls}`}
+                  className={`text-sm text-muted-foreground hover:text-accent transition-colors ${active ? "text-accent" : ""}`}
                 >
                   {item.name}
                 </Link>
